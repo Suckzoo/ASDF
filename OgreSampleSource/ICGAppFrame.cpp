@@ -211,9 +211,10 @@ bool ICGAppFrame::SetupScene()
 	{
 		//-------------------------------------------------------------------------------------
 		// Create the scene
-
-
-
+		Ogre::SceneNode* headNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Sphere");
+		Ogre::Entity* sphere = mSceneMgr->createEntity("SphereEntity", "ninja.mesh");
+		headNode->attachObject(sphere);
+		
 		// Set ambient light
 		mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 
