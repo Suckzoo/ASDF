@@ -203,19 +203,19 @@ void ICGAppFrame::Cleanup()
 bool ICGAppFrame::SetupScene()
 {
 	// Position it at 500 in Z direction
-	mCamera->setPosition(Ogre::Vector3(0,0,80));
+	mCamera->setPosition(Ogre::Vector3(0,0,500));
 	// Look back along -Z
-	mCamera->lookAt(Ogre::Vector3(0,0,-300));
-
+	mCamera->lookAt(Ogre::Vector3(0,0,0));
 	// This block will be the practice task for today
 	{
 		mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox");
 		//-------------------------------------------------------------------------------------
 		// Create the scene
 		Ogre::SceneNode* headNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Sphere");
-		Ogre::Entity* sphere = mSceneMgr->createEntity("SphereEntity", "ninja.mesh");
+		Ogre::Entity* sphere = mSceneMgr->createEntity("SphereEntity", Ogre::SceneManager::PT_SPHERE); //PT_SPHERE radius = 100
 		headNode->attachObject(sphere);
-		
+		headNode->setPosition(0,0,0);
+		headNode->setScale(1,1,1);
 		// Set ambient light
 		mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 
