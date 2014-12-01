@@ -209,6 +209,7 @@ bool ICGAppFrame::SetupScene()
 
 	// This block will be the practice task for today
 	{
+		mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox");
 		//-------------------------------------------------------------------------------------
 		// Create the scene
 		Ogre::SceneNode* headNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Sphere");
