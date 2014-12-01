@@ -213,6 +213,10 @@ bool ICGAppFrame::SetupScene()
 		// Create the scene
 		Ogre::SceneNode* headNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Sphere");
 		Ogre::Entity* sphere = mSceneMgr->createEntity("SphereEntity", Ogre::SceneManager::PT_SPHERE); //PT_SPHERE radius = 100
+		Ogre::MaterialPtr mptr = Ogre::MaterialManager::getSingleton().getByName("Examples/BeachStones");
+		sphere->setMaterial(mptr);
+		//sphere->setMaterialName("Examples/Beachstones");
+		
 		headNode->attachObject(sphere);
 		headNode->setPosition(0,0,0);
 		headNode->setScale(1,1,1);
