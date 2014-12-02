@@ -25,6 +25,10 @@ ICGAppFrame::ICGAppFrame(void)
 	, mMouseInput(nullptr)
 	, mKeyboardInput(nullptr)
 	, mShutDown(false)
+	, mKey_W(false)
+	, mKey_S(false)
+	, mKey_A(false)
+	, mKey_D(false)
 	, mCameraNearClipDistance(1.0f)
 {
 
@@ -258,6 +262,19 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	{
 
 	}
+	
+	if (mKey_W) {
+		mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection()*0.05);
+	}
+	if (mKey_S) {
+		mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection()*-0.05);
+	}
+	if (mKey_A) {
+		mCamera->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree(0.05)));
+	}
+	if (mKey_D) {
+		mCamera->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree(-0.05)));
+	}
 
 	return true;
 }
@@ -269,7 +286,7 @@ bool ICGAppFrame::keyPressed( const OIS::KeyEvent &arg )
 		return true;   // don't process any more keys if dialog is up
 	}
 
-	if (arg.key == OIS::KC_F)   // toggle visibility of advanced frame stats
+	if (arg.key == OIS::KC_Z)   // toggle visibility of advanced frame stats
 	{
 		mTrayMgr->toggleAdvancedFrameStats();
 	}
@@ -308,12 +325,37 @@ bool ICGAppFrame::keyPressed( const OIS::KeyEvent &arg )
 	{
 		mShutDown = true;
 	}
+	
+	if(arg.key == OIS::KC_W) {
+		mKey_W = true;
+	}
+	if(arg.key == OIS::KC_S) {
+		mKey_S = true;
+	}
+	if(arg.key == OIS::KC_A) {
+		mKey_A = true;
+	}
+	if(arg.key == OIS::KC_D) {
+		mKey_D = true;
+	}
 
 	return true;
 }
 
 bool ICGAppFrame::keyReleased( const OIS::KeyEvent &arg )
 {
+	if(arg.key == OIS::KC_W) {
+		mKey_W = false;
+	}
+	if(arg.key == OIS::KC_S) {
+		mKey_S = false;
+	}
+	if(arg.key == OIS::KC_A) {
+		mKey_A = false;
+	}
+	if(arg.key == OIS::KC_D) {
+		mKey_D = false;
+	}
 	return true;
 }
 
