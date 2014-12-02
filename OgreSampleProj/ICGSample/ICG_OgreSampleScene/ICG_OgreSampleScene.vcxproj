@@ -162,7 +162,7 @@
     <ClInclude Include="..\..\..\OgreSampleSource\ICGSdkTrays.h" />
     <ClInclude Include="..\..\..\OgreSampleSource\ICGUtils.h" />
     <ClInclude Include="..\..\..\OgreSampleSource\Object.h" />
-    <ClInclude Include="Sphere.h" />
+    <ClInclude Include="..\..\..\OgreSampleSource\Sphere.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\OgreSampleSource\ICGAppFrame.cpp" />

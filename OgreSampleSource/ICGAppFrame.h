@@ -61,11 +61,13 @@ protected:
 	 * You call setNearClipDistance to camera to actually set this */
 	Ogre::Real mCameraNearClipDistance;
 
+	btDiscreteDynamicsWorld* dynamicsWorld;
 
 public:
 	ICGAppFrame(void);
 	virtual ~ICGAppFrame(void);
-	
+	Ogre::SceneManager* getSceneMgr() {return this->mSceneMgr;}
+	btDiscreteDynamicsWorld* getDynamicsWorld() {return this->dynamicsWorld;}
 	/** Upper-most method directly called from WinMain */
 	bool go(void);
 

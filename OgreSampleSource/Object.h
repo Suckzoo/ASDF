@@ -25,6 +25,10 @@ public:
 	}
 	void setPosition(Ogre::Real x, Ogre::Real y, Ogre::Real z)
 	{
+		btTransform trans;
+		this->rigidBody->getMotionState()->getWorldTransform(trans);
+		trans.setOrigin(btVector3(x, y, z));
+		this->rigidBody->getMotionState()->setWorldTransform(trans);
 		sceneNode->setPosition(x, y, z);
 	}
 	Ogre::Vector3 getPosition() 
@@ -33,6 +37,10 @@ public:
 	}
 	void setOrientation(Ogre::Real w, Ogre::Real x, Ogre::Real y, Ogre::Real z)
 	{
+		btTransform trans;
+		this->rigidBody->getMotionState()->getWorldTransform(trans);
+		trans.setRotation(btQuaternion(x, y, z, w));
+		this->rigidBody->getMotionState()->setWorldTransform(trans);
 		sceneNode->setOrientation(w, x, y, z);
 	}
 	Ogre::Quaternion getOrientation()

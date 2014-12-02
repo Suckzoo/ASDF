@@ -30,6 +30,7 @@ ICGAppFrame::ICGAppFrame(void)
 	, mKey_A(false)
 	, mKey_D(false)
 	, mCameraNearClipDistance(1.0f)
+	, dynamicsWorld(nullptr)
 {
 
 }
@@ -190,6 +191,13 @@ bool ICGAppFrame::InitSystem()
 
 	mTheRoot->addFrameListener(this);
 
+	//bullet engine loading
+	btBroadphaseInterface* broadphase = new btDbvtBroadphase();
+	btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
+	btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
+	btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver();
+	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
+	
 	return true;
 }
 
@@ -265,16 +273,16 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	}
 	
 	if (mKey_W) {
-		mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection()*0.05);
+		mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection()*0.2);
 	}
 	if (mKey_S) {
-		mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection()*-0.05);
+		mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection()*-0.2);
 	}
 	if (mKey_A) {
-		mCamera->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree(0.05)));
+		mCamera->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree(0.2)));
 	}
 	if (mKey_D) {
-		mCamera->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree(-0.05)));
+		mCamera->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree(-0.2)));
 	}
 
 	return true;
