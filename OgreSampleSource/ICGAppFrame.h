@@ -22,6 +22,9 @@ Computer Graphics and Visualization Lab @ KAIST
 
 #include "ICGUtils.h"
 
+#include <btBulletDynamicsCommon.h>
+#include <btBulletCollisionCommon.h>
+
 /**
  * ICGAppFrame 
  * Originated from MinimalOgre tutorial framework (http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Ogre+Wiki+Tutorial+Framework)
@@ -53,6 +56,7 @@ protected:
 	 * This affects the precision of the depth buffer.
 	 * You call setNearClipDistance to camera to actually set this */
 	Ogre::Real mCameraNearClipDistance;
+
 
 public:
 	ICGAppFrame(void);

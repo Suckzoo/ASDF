@@ -211,6 +211,7 @@ bool ICGAppFrame::SetupScene()
 		mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox");
 		//-------------------------------------------------------------------------------------
 		// Create the scene
+		
 		Ogre::SceneNode* headNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Sphere");
 		Ogre::Entity* sphere = mSceneMgr->createEntity("SphereEntity", Ogre::SceneManager::PT_SPHERE); //PT_SPHERE radius = 100
 		Ogre::MaterialPtr mptr = Ogre::MaterialManager::getSingleton().getByName("Examples/BeachStones");
