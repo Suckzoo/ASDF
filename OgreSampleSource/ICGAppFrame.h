@@ -43,6 +43,10 @@ protected:
 	ICGOgreBites::SdkTrayManager* mTrayMgr;
 	
 	bool mShutDown;
+	bool mKey_W;
+	bool mKey_S;
+	bool mKey_A;
+	bool mKey_D;
 
 	// OIS Input devices
 	OIS::InputManager* mInputManager;
