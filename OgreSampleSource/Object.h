@@ -73,5 +73,8 @@ public:
 	{
 		this->rigidBody->applyCentralForce(btVector3(x, y, z));
 	}
+	/*void setCallback(){ //TODO
+		
+	}*/
 };
 #endif
