@@ -163,9 +163,11 @@
     <ClInclude Include="..\..\..\OgreSampleSource\ICGUtils.h" />
     <ClInclude Include="..\..\..\OgreSampleSource\Object.h" />
     <ClInclude Include="..\..\..\OgreSampleSource\Sphere.h" />
+    <ClInclude Include="..\..\..\OgreSampleSource\World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\OgreSampleSource\ICGAppFrame.cpp" />
+    <ClCompile Include="..\..\..\OgreSampleSource\World.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

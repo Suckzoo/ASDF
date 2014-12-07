@@ -11,6 +11,7 @@ Computer Graphics and Visualization Lab @ KAIST
 #include "Object.h"
 #include "Sphere.h"
 #include "ICGAppFrame.h"
+#include "World.h"
 
 HINSTANCE ghInstance = nullptr;
 Ogre::String gCachedCmmandLine;
@@ -230,6 +231,7 @@ bool ICGAppFrame::SetupScene()
 		Sphere* sphere = new Sphere("SphereNode1");
 		sphere->applyMaterial("Examples/BeachStones");
 		sphere->setPosition(0,0,0);
+		World::getInstance()->addObject(sphere);
 		//sphere->applyMaterial("Examples/Beachstones");
 		//Ogre::SceneNode* headNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Sphere");
 		//Ogre::Entity* sphere = mSceneMgr->createEntity("SphereEntity", Ogre::SceneManager::PT_SPHERE); //PT_SPHERE radius = 100
