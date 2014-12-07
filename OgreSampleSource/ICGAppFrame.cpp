@@ -28,6 +28,7 @@ ICGAppFrame::ICGAppFrame(void)
 	, mMouseInput(nullptr)
 	, mKeyboardInput(nullptr)
 	, mShutDown(false)
+	, mMouse_L(false)
 	, mKey_W(false)
 	, mKey_S(false)
 	, mKey_A(false)
@@ -380,6 +381,12 @@ bool ICGAppFrame::mouseMoved( const OIS::MouseEvent &arg )
 	{
 		return true;
 	}
+	if(mMouse_L) {
+		Ogre::Vector2 newPos = Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs);
+		mCamera->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree(-0.1)*(newPos.x-pos.x)));
+		mCamera->rotate(Ogre::Vector3(1, 0, 0), Ogre::Radian(Ogre::Degree(-0.1)*(newPos.y-pos.y)));
+		pos = newPos;
+	}
 	return true;
 }
 
@@ -389,6 +396,10 @@ bool ICGAppFrame::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID i
 	{
 		return true;
 	}
+	if(id == OIS::MouseButtonID::MB_Left) {
+		mMouse_L = true;
+		pos = Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs);
+	}
 	return true;
 }
 
@@ -397,6 +408,9 @@ bool ICGAppFrame::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID 
 	if (mTrayMgr->injectMouseUp(arg, id)) 
 	{
 		return true;
+	}
+	if(id == OIS::MouseButtonID::MB_Left) {
+		mMouse_L = false;
 	}
 	return true;
 }

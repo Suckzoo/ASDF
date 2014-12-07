@@ -49,6 +49,8 @@ protected:
 	ICGOgreBites::SdkTrayManager* mTrayMgr;
 	
 	bool mShutDown;
+	bool mMouse_L;
+	Ogre::Vector2 pos;
 	bool mKey_W;
 	bool mKey_S;
 	bool mKey_A;
