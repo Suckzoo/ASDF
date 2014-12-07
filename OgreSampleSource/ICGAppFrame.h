@@ -32,7 +32,13 @@ Computer Graphics and Visualization Lab @ KAIST
  */
 class ICGAppFrame : public Ogre::FrameListener, public Ogre::WindowEventListener, public OIS::KeyListener, public OIS::MouseListener, public ICGOgreBites::SdkTrayListener
 {
+private:
+	//Singleton style
+	static ICGAppFrame* instance;
+	ICGAppFrame(void);
+
 protected:
+
 	Ogre::Root *mTheRoot;
 	Ogre::Camera* mCamera;
 	Ogre::SceneManager* mSceneMgr;
@@ -64,10 +70,17 @@ protected:
 	btDiscreteDynamicsWorld* dynamicsWorld;
 
 public:
-	ICGAppFrame(void);
 	virtual ~ICGAppFrame(void);
-	Ogre::SceneManager* getSceneMgr() {return this->mSceneMgr;}
-	btDiscreteDynamicsWorld* getDynamicsWorld() {return this->dynamicsWorld;}
+	static ICGAppFrame* getInstance()
+	{
+		if(instance==NULL)
+		{
+			instance = new ICGAppFrame;
+		}
+		return instance;
+	}
+	Ogre::SceneManager* getSceneMgr() {return mSceneMgr;}
+	void addToDynamicsWorld(btRigidBody* _obj) {dynamicsWorld->addRigidBody(_obj);}
 	/** Upper-most method directly called from WinMain */
 	bool go(void);
 

@@ -8,11 +8,14 @@ Computer Graphics and Visualization Lab @ KAIST
 -----------------------------------------------------------------------------
 */
 
+#include "Object.h"
+#include "Sphere.h"
 #include "ICGAppFrame.h"
 
 HINSTANCE ghInstance = nullptr;
 Ogre::String gCachedCmmandLine;
 
+ICGAppFrame* ICGAppFrame::instance = nullptr;
 ICGAppFrame::ICGAppFrame(void)
 	: mTheRoot(nullptr)
 	, mCamera(nullptr)
@@ -223,17 +226,20 @@ bool ICGAppFrame::SetupScene()
 		mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox");
 		//-------------------------------------------------------------------------------------
 		// Create the scene
-		
-		Ogre::SceneNode* headNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Sphere");
-		Ogre::Entity* sphere = mSceneMgr->createEntity("SphereEntity", Ogre::SceneManager::PT_SPHERE); //PT_SPHERE radius = 100
-		Ogre::MaterialPtr mptr = Ogre::MaterialManager::getSingleton().getByName("Examples/BeachStones");
-		sphere->setMaterial(mptr);
+		Sphere* sphere = new Sphere("SphereNode1");
+		sphere->applyMaterial("Examples/BeachStones");
+		sphere->setPosition(0,0,0);
+		//sphere->applyMaterial("Examples/Beachstones");
+		//Ogre::SceneNode* headNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Sphere");
+		//Ogre::Entity* sphere = mSceneMgr->createEntity("SphereEntity", Ogre::SceneManager::PT_SPHERE); //PT_SPHERE radius = 100
+		//Ogre::MaterialPtr mptr = Ogre::MaterialManager::getSingleton().getByName("Examples/BeachStones");
+		//sphere->setMaterial(mptr);
 		//sphere->setMaterialName("Examples/Beachstones");
 		
-		headNode->attachObject(sphere);
+		/*headNode->attachObject(sphere);
 		headNode->setPosition(0,0,0);
 		headNode->setScale(1,1,1);
-		// Set ambient light
+		*/// Set ambient light
 		mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 
 		// Create a light
@@ -436,11 +442,11 @@ extern "C" {
 		gCachedCmmandLine = strCmdLine;
 
 		// Create application object
-		ICGAppFrame app;
+		//ICGAppFrame app;
 
 		try 
 		{
-			app.go();
+			ICGAppFrame::getInstance()->go();
 		} 
 		catch( Ogre::Exception& e ) 
 		{

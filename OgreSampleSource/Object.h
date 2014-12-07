@@ -1,6 +1,7 @@
 #ifndef __CS482OBJ__
 #define __CS482OBJ__
 
+
 #include <Ogre.h>
 #include <OIS.h>
 #include <btBulletDynamicsCommon.h>
@@ -11,6 +12,7 @@
 #include "ICGDef.h"
 
 #include "ICGUtils.h"
+#include "ICGAppFrame.h"
 
 class Object
 {
@@ -23,6 +25,8 @@ public:
 	{
 
 	}
+	Ogre::SceneNode* getSceneNode() {return this->sceneNode;}
+	btRigidBody* getRigidBody() {return this->rigidBody;}
 	void setPosition(Ogre::Real x, Ogre::Real y, Ogre::Real z)
 	{
 		btTransform trans;
@@ -65,9 +69,9 @@ public:
 		this->setPosition(pos.x(), pos.y(), pos.z());
 		this->setOrientation(rot.w(), rot.x(), rot.y(), rot.z());
 	}
-	void registerDynamicsWorld(btDiscreteDynamicsWorld* world)
+	void applyCentralForce(double x, double y, double z)
 	{
-		world->addRigidBody(this->rigidBody);
+		this->rigidBody->applyCentralForce(btVector3(x, y, z));
 	}
 };
 #endif
