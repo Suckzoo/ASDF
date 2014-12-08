@@ -18,9 +18,6 @@
     <ClCompile Include="..\..\..\OgreSampleSource\ICGAppFrame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\OgreSampleSource\World.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\OgreSampleSource\ICGAppFrame.h">
@@ -41,10 +38,10 @@
     <ClInclude Include="..\..\..\OgreSampleSource\Object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\OgreSampleSource\Sphere.h">
+    <ClInclude Include="Sphere.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\OgreSampleSource\World.h">
+    <ClInclude Include="rocket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
