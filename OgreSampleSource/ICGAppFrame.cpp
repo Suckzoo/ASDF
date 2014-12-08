@@ -10,6 +10,7 @@ Computer Graphics and Visualization Lab @ KAIST
 
 #include "Object.h"
 #include "Sphere.h"
+#include "rocket.h"
 #include "ICGAppFrame.h"
 #include "World.h"
 
@@ -232,6 +233,10 @@ bool ICGAppFrame::SetupScene()
 		sphere->applyMaterial("Examples/BeachStones");
 		sphere->setPosition(0,0,0);
 		World::getInstance()->addObject(sphere);
+		Rocket* rocket = new Rocket("RocketNode1");
+		rocket->setPosition(-100,0,0);
+		World::getInstance()->addObject(rocket);
+		
 		//sphere->applyMaterial("Examples/Beachstones");
 		//Ogre::SceneNode* headNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Sphere");
 		//Ogre::Entity* sphere = mSceneMgr->createEntity("SphereEntity", Ogre::SceneManager::PT_SPHERE); //PT_SPHERE radius = 100
