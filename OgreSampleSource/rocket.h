@@ -19,7 +19,7 @@ public:
     	//set a scene node
 		sceneNode = ICGAppFrame::getInstance()->getSceneMgr()->getRootSceneNode()->createChildSceneNode(nodeName);
 		//set a entity: the visual shape
-		entity = ICGAppFrame::getInstance()->getSceneMgr()->createEntity("RocketEntity", "ogrehead.mesh");//
+		entity = ICGAppFrame::getInstance()->getSceneMgr()->createEntity("RocketEntity", "ogrehead.mesh");
 		sceneNode->attachObject(entity);
 		
 		//set scale
