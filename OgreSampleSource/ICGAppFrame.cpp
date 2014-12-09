@@ -8,11 +8,15 @@ Computer Graphics and Visualization Lab @ KAIST
 -----------------------------------------------------------------------------
 */
 
+#include "Object.h"
+#include "Sphere.h"
 #include "ICGAppFrame.h"
+#include "World.h"
 
 HINSTANCE ghInstance = nullptr;
 Ogre::String gCachedCmmandLine;
 
+ICGAppFrame* ICGAppFrame::instance = nullptr;
 ICGAppFrame::ICGAppFrame(void)
 	: mTheRoot(nullptr)
 	, mCamera(nullptr)
@@ -31,6 +35,7 @@ ICGAppFrame::ICGAppFrame(void)
 	, mKey_A(false)
 	, mKey_D(false)
 	, mCameraNearClipDistance(1.0f)
+	, dynamicsWorld(nullptr)
 {
 
 }
@@ -191,6 +196,13 @@ bool ICGAppFrame::InitSystem()
 
 	mTheRoot->addFrameListener(this);
 
+	//bullet engine loading
+	btBroadphaseInterface* broadphase = new btDbvtBroadphase();
+	btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
+	btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
+	btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver();
+	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
+	
 	return true;
 }
 
@@ -216,17 +228,21 @@ bool ICGAppFrame::SetupScene()
 		mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox");
 		//-------------------------------------------------------------------------------------
 		// Create the scene
-		
-		Ogre::SceneNode* headNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Sphere");
-		Ogre::Entity* sphere = mSceneMgr->createEntity("SphereEntity", Ogre::SceneManager::PT_SPHERE); //PT_SPHERE radius = 100
-		Ogre::MaterialPtr mptr = Ogre::MaterialManager::getSingleton().getByName("Examples/BeachStones");
-		sphere->setMaterial(mptr);
+		Sphere* sphere = new Sphere("SphereNode1");
+		sphere->applyMaterial("Examples/BeachStones");
+		sphere->setPosition(0,0,0);
+		World::getInstance()->addObject(sphere);
+		//sphere->applyMaterial("Examples/Beachstones");
+		//Ogre::SceneNode* headNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Sphere");
+		//Ogre::Entity* sphere = mSceneMgr->createEntity("SphereEntity", Ogre::SceneManager::PT_SPHERE); //PT_SPHERE radius = 100
+		//Ogre::MaterialPtr mptr = Ogre::MaterialManager::getSingleton().getByName("Examples/BeachStones");
+		//sphere->setMaterial(mptr);
 		//sphere->setMaterialName("Examples/Beachstones");
 		
-		headNode->attachObject(sphere);
+		/*headNode->attachObject(sphere);
 		headNode->setPosition(0,0,0);
 		headNode->setScale(1,1,1);
-		// Set ambient light
+		*/// Set ambient light
 		mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 
 		// Create a light
@@ -266,16 +282,16 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	}
 	
 	if (mKey_W) {
-		mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection()*0.05);
+		mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection()*0.2);
 	}
 	if (mKey_S) {
-		mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection()*-0.05);
+		mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection()*-0.2);
 	}
 	if (mKey_A) {
-		mCamera->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree(0.05)));
+		mCamera->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree(0.2)));
 	}
 	if (mKey_D) {
-		mCamera->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree(-0.05)));
+		mCamera->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree(-0.2)));
 	}
 
 	return true;
@@ -442,11 +458,11 @@ extern "C" {
 		gCachedCmmandLine = strCmdLine;
 
 		// Create application object
-		ICGAppFrame app;
+		//ICGAppFrame app;
 
 		try 
 		{
-			app.go();
+			ICGAppFrame::getInstance()->go();
 		} 
 		catch( Ogre::Exception& e ) 
 		{
