@@ -16,6 +16,7 @@ World* World::getInstance()
 	}
 	return instance;
 }
+
 void World::addObject(Object* obj)
 {
 	m_pWorld.push_back(obj);
