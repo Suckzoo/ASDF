@@ -1,0 +1,274 @@
+material blinn10SG
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 1 1 1 0.5 59
+
+			texture_unit
+			{
+				texture SATURNVU.GIF
+			}
+
+			texture_unit
+			{
+			}
+		}
+
+	}
+
+}
+
+
+material blinn11SG
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 1 1 1 0.5 59
+
+			texture_unit
+			{
+				texture SATURNVW.BMP
+			}
+
+			texture_unit
+			{
+			}
+		}
+
+	}
+
+}
+
+
+material blinn1SG
+{
+	technique
+	{
+		pass
+		{
+			specular 1 1 1 0.5 59
+
+			texture_unit
+			{
+			}
+		}
+
+	}
+
+}
+
+
+material blinn2SG
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 1 1 1 0.5 59
+
+			texture_unit
+			{
+			}
+		}
+
+	}
+
+}
+
+
+material blinn3SG
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.878431 0.788235 0.666667 1
+			diffuse 0.878431 0.788235 0.666667 1
+			specular 1 1 1 0.5 59
+
+			texture_unit
+			{
+			}
+		}
+
+	}
+
+}
+
+
+material blinn4SG
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.839216 0.807843 0.776471 1
+			diffuse 0.839216 0.807843 0.776471 1
+			specular 1 1 1 0.5 59
+
+			texture_unit
+			{
+			}
+		}
+
+	}
+
+}
+
+
+material blinn5SG
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.8 0.8 0.8 1
+			diffuse 0.8 0.8 0.8 1
+			specular 1 1 1 0.5 59
+
+			texture_unit
+			{
+			}
+		}
+
+	}
+
+}
+
+
+material blinn6SG
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.619608 0.619608 0.619608 1
+			diffuse 0.619608 0.619608 0.619608 1
+			specular 1 1 1 0.5 59
+
+			texture_unit
+			{
+			}
+		}
+
+	}
+
+}
+
+
+material blinn8SG
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 1 1 1 0.5 59
+
+			texture_unit
+			{
+				texture SATURNVT.GIF
+			}
+
+			texture_unit
+			{
+			}
+		}
+
+	}
+
+}
+
+
+material blinn9SG
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 1 1 1 0.5 59
+
+			texture_unit
+			{
+				texture SATURNVA.GIF
+			}
+
+			texture_unit
+			{
+			}
+		}
+
+	}
+
+}
+
+
+material fin_blinn1SG
+{
+	technique
+	{
+		pass
+		{
+			specular 1 1 1 0.5 1
+
+			texture_unit
+			{
+			}
+		}
+
+	}
+
+}
+
+
+material fin_blinn2SG
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 1 1 1 0.5 1
+
+			texture_unit
+			{
+			}
+		}
+
+	}
+
+}
+
+
+material initialShadingGr
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.498039 0.498039 0.498039 1
+			diffuse 0.498039 0.498039 0.498039 1
+			specular 1 1 1 0.69 59
+
+			texture_unit
+			{
+			}
+		}
+
+	}
+
+}

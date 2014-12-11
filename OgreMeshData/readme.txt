@@ -1,0 +1,1 @@
+you should copy and paste them into ..\CS482_team\ICGMedia\ICGSampleContent.
