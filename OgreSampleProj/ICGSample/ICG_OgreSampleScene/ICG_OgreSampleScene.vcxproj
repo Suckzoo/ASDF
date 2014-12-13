@@ -164,6 +164,7 @@
     <ClInclude Include="..\..\..\OgreSampleSource\Object.h" />
     <ClInclude Include="..\..\..\OgreSampleSource\Sphere.h" />
     <ClInclude Include="..\..\..\OgreSampleSource\World.h" />
+    <ClInclude Include="Box.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\OgreSampleSource\ICGAppFrame.cpp" />
