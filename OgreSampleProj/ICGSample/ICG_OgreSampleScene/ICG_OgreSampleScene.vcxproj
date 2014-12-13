@@ -156,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\OgreSampleSource\Box.h" />
     <ClInclude Include="..\..\..\OgreSampleSource\ICGAppFrame.h" />
     <ClInclude Include="..\..\..\OgreSampleSource\ICGDef.h" />
     <ClInclude Include="..\..\..\OgreSampleSource\ICGSdkCameraMan.h" />
@@ -164,7 +165,6 @@
     <ClInclude Include="..\..\..\OgreSampleSource\Object.h" />
     <ClInclude Include="..\..\..\OgreSampleSource\Sphere.h" />
     <ClInclude Include="..\..\..\OgreSampleSource\World.h" />
-    <ClInclude Include="Box.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\OgreSampleSource\ICGAppFrame.cpp" />

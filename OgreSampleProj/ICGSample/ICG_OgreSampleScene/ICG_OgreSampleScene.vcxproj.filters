@@ -47,7 +47,7 @@
     <ClInclude Include="..\..\..\OgreSampleSource\World.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Box.h">
+    <ClInclude Include="..\..\..\OgreSampleSource\Box.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
