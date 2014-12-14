@@ -15,7 +15,7 @@ public:
 		sceneNode = ICGAppFrame::getInstance()->getSceneMgr()->getRootSceneNode()->createChildSceneNode(nodeName);
 		entity = ICGAppFrame::getInstance()->getSceneMgr()->createEntity("SphereEntity", Ogre::SceneManager::PT_CUBE);
 		sceneNode->attachObject(entity);
-		Ogre::Vector3 halfExtents = Ogre::Vector3(halfExtentX, halfExtentY, halfExtentZ);
+		btVector3 halfExtents = btVector3(halfExtentX, halfExtentY, halfExtentZ);
 		btBoxShape* shape = new btBoxShape(halfExtents);
 		btDefaultMotionState *motionstate = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(0,0,0)));
 		btVector3 localInertia;

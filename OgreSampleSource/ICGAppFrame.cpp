@@ -10,6 +10,7 @@ Computer Graphics and Visualization Lab @ KAIST
 
 #include "Object.h"
 #include "Sphere.h"
+#include "Box.h"
 #include "ICGAppFrame.h"
 #include "World.h"
 
@@ -238,6 +239,7 @@ bool ICGAppFrame::SetupScene()
 		//Ogre::MaterialPtr mptr = Ogre::MaterialManager::getSingleton().getByName("Examples/BeachStones");
 		//sphere->setMaterial(mptr);
 		//sphere->setMaterialName("Examples/Beachstones");
+
 		
 		/*headNode->attachObject(sphere);
 		headNode->setPosition(0,0,0);
