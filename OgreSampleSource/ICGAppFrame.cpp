@@ -233,10 +233,10 @@ bool ICGAppFrame::SetupScene()
 		// Create the scene
 		Sphere* sphere = new Sphere("SphereNode1");
 		sphere->applyMaterial("Examples/BeachStones");
-		sphere->setPosition(0,0,0);
+		//sphere->setPosition(0,0,0);
 		World::getInstance()->addObject(sphere);
-		Rocket* rocket = new Rocket("RocketNode1",500,500,500,10);
-		rocket->setPosition(-200,0,0);
+		Rocket* rocket = new Rocket("RocketNode1",500,500,500,10,btVector3(-200,0,0));
+		//rocket->setPosition(-200,0,0);
 		World::getInstance()->addObject(rocket);
 		
 		/*sphere->applyMaterial("Examples/Beachstones");
@@ -306,6 +306,7 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	if (mKey_D) {
 		mCamera->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree(-0.2)));
 	}
+	//Sleep(1000.0/60.0);
 	return true;
 }
 
