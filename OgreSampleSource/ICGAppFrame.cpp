@@ -245,6 +245,9 @@ bool ICGAppFrame::SetupScene()
 		*/// Set ambient light
 		mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 
+		Ogre::ParticleSystem* particleSystem = mSceneMgr->createParticleSystem("explosions", "Examples/Smoke");
+		particleSystem->fastForward(10.0);
+		sphere->getSceneNode()->attachObject(particleSystem);
 		// Create a light
 		//Ogre::Light* MainLight = mSceneMgr->createLight("MainLight");
 		//MainLight->setPosition(20,80,50);
