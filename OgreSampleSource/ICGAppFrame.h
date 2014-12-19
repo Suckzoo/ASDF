@@ -24,6 +24,8 @@ Computer Graphics and Visualization Lab @ KAIST
 
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
+#include <exception>
+using std::exception;
 
 /**
  * ICGAppFrame 
@@ -84,6 +86,10 @@ public:
 	Ogre::SceneManager* getSceneMgr() {return mSceneMgr;}
 	void removeObjectFromDynamicsWorld(btRigidBody* _obj) {dynamicsWorld->removeRigidBody(_obj);}
 	void addToDynamicsWorld(btRigidBody* _obj) {dynamicsWorld->addRigidBody(_obj);}
+	void deleteFromDynamicsWorld(btRigidBody* _obj)
+	{
+		dynamicsWorld->removeRigidBody(_obj);
+	}
 	/** Upper-most method directly called from WinMain */
 	bool go(void);
 
