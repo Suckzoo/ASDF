@@ -222,6 +222,7 @@ void ICGAppFrame::Cleanup()
 bool ICGAppFrame::SetupScene()
 {
 	// Position it at 500 in Z direction
+	dynamicsWorld->setGravity(btVector3(0,0,0));
 	mCamera->setPosition(Ogre::Vector3(0,0,500));
 	// Look back along -Z
 	mCamera->lookAt(Ogre::Vector3(0,0,0));
@@ -235,15 +236,15 @@ bool ICGAppFrame::SetupScene()
 		sphere->setPosition(0,0,0);
 		World::getInstance()->addObject(sphere);
 		Rocket* rocket = new Rocket("RocketNode1",500,500,500,10);
-		rocket->setPosition(-100,0,0);
+		rocket->setPosition(-200,0,0);
 		World::getInstance()->addObject(rocket);
 		
-		//sphere->applyMaterial("Examples/Beachstones");
-		//Ogre::SceneNode* headNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Sphere");
-		//Ogre::Entity* sphere = mSceneMgr->createEntity("SphereEntity", Ogre::SceneManager::PT_SPHERE); //PT_SPHERE radius = 100
-		//Ogre::MaterialPtr mptr = Ogre::MaterialManager::getSingleton().getByName("Examples/BeachStones");
-		//sphere->setMaterial(mptr);
-		//sphere->setMaterialName("Examples/Beachstones");
+		/*sphere->applyMaterial("Examples/Beachstones");
+		Ogre::SceneNode* headNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Sphere");
+		Ogre::Entity* sphere = mSceneMgr->createEntity("SphereEntity", Ogre::SceneManager::PT_SPHERE); //PT_SPHERE radius = 100
+		Ogre::MaterialPtr mptr = Ogre::MaterialManager::getSingleton().getByName("Examples/BeachStones");
+		sphere->setMaterial(mptr);
+		sphere->setMaterialName("Examples/Beachstones");*/
 
 		
 		/*headNode->attachObject(sphere);
@@ -300,10 +301,14 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 		mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection()*-0.2);
 	}
 	if (mKey_A) {
-		mCamera->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree(0.2)));
+		//mCamera->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree(0.2)));
+		//mCamera->rotate(Ogre::Quaternion(Ogre::Math::Cos(Ogre::Radian(Ogre::Degree(0.1))), 0, Ogre::Math::Sin(Ogre::Radian(Ogre::Degree(0.1))), 0));
+		mCamera->rotate(mCamera->getRealUp(), Ogre::Radian(Ogre::Degree(0.2)));
 	}
 	if (mKey_D) {
-		mCamera->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree(-0.2)));
+		//mCamera->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree(-0.2)));
+		//mCamera->rotate(Ogre::Quaternion(Ogre::Math::Cos(Ogre::Radian(Ogre::Degree(-0.1))), 0, Ogre::Math::Sin(Ogre::Radian(Ogre::Degree(-0.1))), 0));
+		mCamera->rotate(mCamera->getRealUp(), Ogre::Radian(Ogre::Degree(-0.2)));
 	}
 	return true;
 }
@@ -396,8 +401,12 @@ bool ICGAppFrame::mouseMoved( const OIS::MouseEvent &arg )
 	}
 	if(mMouse_L) {
 		Ogre::Vector2 newPos = Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs);
-		mCamera->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree(-0.1)*(newPos.x-pos.x)));
-		mCamera->rotate(Ogre::Vector3(1, 0, 0), Ogre::Radian(Ogre::Degree(-0.1)*(newPos.y-pos.y)));
+		//mCamera->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree(-0.1)*(newPos.x-pos.x)));
+		//mCamera->rotate(Ogre::Quaternion(Ogre::Math::Cos(Ogre::Radian(Ogre::Degree(-0.05)*(newPos.x-pos.x))), 0, Ogre::Math::Sin(Ogre::Radian(Ogre::Degree(-0.05)*(newPos.x-pos.x))), 0));
+		mCamera->rotate(mCamera->getRealUp(), Ogre::Radian(Ogre::Degree(-0.1)*(newPos.x-pos.x)));
+		//mCamera->rotate(Ogre::Vector3(1, 0, 0), Ogre::Radian(Ogre::Degree(-0.1)*(newPos.y-pos.y)));
+		//mCamera->rotate(Ogre::Quaternion(Ogre::Math::Cos(Ogre::Radian(Ogre::Degree(-0.05)*(newPos.y-pos.y))), Ogre::Math::Sin(Ogre::Radian(Ogre::Degree(-0.05)*(newPos.y-pos.y))), 0, 0));
+		mCamera->rotate(mCamera->getRealDirection().crossProduct(mCamera->getRealUp()), Ogre::Radian(Ogre::Degree(-0.1)*(newPos.y-pos.y)));
 		pos = newPos;
 	}
 	return true;
