@@ -1,7 +1,8 @@
 #include "World.h"
-
+#include <memory>
+using std::shared_ptr;
 World::World()
-	: m_pWorld(vector<Object*>())
+	: m_pWorld(list<shared_ptr<Object> >())
 {
 
 }
@@ -19,7 +20,7 @@ World* World::getInstance()
 
 void World::addObject(Object* obj)
 {
-	m_pWorld.push_back(obj);
+	m_pWorld.push_back(shared_ptr<Object>(obj));
 }
 
 void World::stepSimulation()
@@ -27,6 +28,11 @@ void World::stepSimulation()
 	//m_pLaunchedRocket.get()->stepSimulation();
 	for(auto it = m_pWorld.begin(); it != m_pWorld.end(); it++)
 	{
+		
+		/*if() {
+			m_pWorld.erase(it);
+			continue;
+		}*/
 		(*it)->stepSimulation();
 	}
 	//TODO : Collision detection for m_pLaunchedRocket and m_pWorld[i].

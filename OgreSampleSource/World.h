@@ -1,18 +1,19 @@
 #ifndef __WORLD__
 #define __WORLD__
 #include "Object.h"
-#include <vector>
-#include <memory>
 #include "rocket.h"
 
-using std::vector;
+#include <list>
+#include <memory>
+
+using std::list;
 using std::shared_ptr;
 class World
 {
 private:
 	static World* instance;
 	World();
-	vector <Object*> m_pWorld;
+	list <shared_ptr<Object> > m_pWorld;
 	shared_ptr<Rocket> m_pLaunchedRocket;
 public:
 	static World* getInstance();
