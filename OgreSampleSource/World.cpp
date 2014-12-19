@@ -27,12 +27,11 @@ void World::stepSimulation()
 {
 	//m_pLaunchedRocket.get()->stepSimulation();
 	for(auto it = m_pWorld.begin(); it != m_pWorld.end(); it++)
-	{
-		
-		/*if() {
+	{		
+		if(!(*it)) {
 			m_pWorld.erase(it);
 			continue;
-		}*/
+		}
 		(*it)->stepSimulation();
 	}
 	//TODO : Collision detection for m_pLaunchedRocket and m_pWorld[i].
