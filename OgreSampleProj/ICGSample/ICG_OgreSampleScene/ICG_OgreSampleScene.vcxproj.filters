@@ -41,10 +41,13 @@
     <ClInclude Include="..\..\..\OgreSampleSource\Object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\OgreSampleSource\Sphere.h">
+    <ClInclude Include="..\..\..\OgreSampleSource\rocket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\OgreSampleSource\World.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\OgreSampleSource\Sphere.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\OgreSampleSource\Box.h">

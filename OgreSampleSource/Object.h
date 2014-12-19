@@ -20,10 +20,23 @@ protected:
 	Ogre::SceneNode* sceneNode;
 	Ogre::Entity* entity;
 	btRigidBody* rigidBody;
+	btCollisionShape* shape;
+	btDefaultMotionState *motionstate;
 public:
 	Object() : sceneNode(nullptr), entity(nullptr), rigidBody(nullptr)
 	{
 
+	}
+	virtual ~Object()
+	{
+		ICGAppFrame::getInstance()->removeObjectFromDynamicsWorld(rigidBody);
+		ICGAppFrame::getInstance()->getSceneMgr()->destroySceneNode(sceneNode);
+		ICGAppFrame::getInstance()->getSceneMgr()->destroyEntity(entity);
+		delete rigidBody;
+		delete sceneNode;
+		delete entity;
+		delete shape;
+		delete motionstate;
 	}
 	Ogre::SceneNode* getSceneNode() {return this->sceneNode;}
 	btRigidBody* getRigidBody() {return this->rigidBody;}

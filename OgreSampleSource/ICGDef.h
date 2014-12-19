@@ -42,8 +42,10 @@ Computer Graphics and Visualization Lab @ KAIST
 
 #ifdef _DEBUG
 const Ogre::String gSystemOptionsFileName("ICGSystemOptions_d.cfg");
+const Ogre::String gRocketMeshName("rocket.mesh");
 #else
 const Ogre::String gSystemOptionsFileName("ICGSystemOptions.cfg");
+const Ogre::String gRocketMeshName("rocket.mesh");
 #endif
 
 #endif // #ifndef __ICGDef_h_

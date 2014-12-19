@@ -163,6 +163,7 @@
     <ClInclude Include="..\..\..\OgreSampleSource\ICGSdkTrays.h" />
     <ClInclude Include="..\..\..\OgreSampleSource\ICGUtils.h" />
     <ClInclude Include="..\..\..\OgreSampleSource\Object.h" />
+    <ClInclude Include="..\..\..\OgreSampleSource\rocket.h" />
     <ClInclude Include="..\..\..\OgreSampleSource\Sphere.h" />
     <ClInclude Include="..\..\..\OgreSampleSource\World.h" />
   </ItemGroup>

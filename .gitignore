@@ -17,3 +17,4 @@ OgreSampleProj/Tools/
 OgreSampleProj/x64/
 OgreSampleProj/ICGSample/ICG_OgreSampleScene/VSIntermediate
 OgreSampleProj/*.*
+*.cpp~

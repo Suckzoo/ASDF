@@ -11,6 +11,7 @@ Computer Graphics and Visualization Lab @ KAIST
 #include "Object.h"
 #include "Sphere.h"
 #include "Box.h"
+#include "rocket.h"
 #include "ICGAppFrame.h"
 #include "World.h"
 
@@ -233,6 +234,10 @@ bool ICGAppFrame::SetupScene()
 		sphere->applyMaterial("Examples/BeachStones");
 		sphere->setPosition(0,0,0);
 		World::getInstance()->addObject(sphere);
+		Rocket* rocket = new Rocket("RocketNode1",500,500,500,10);
+		rocket->setPosition(-100,0,0);
+		World::getInstance()->addObject(rocket);
+		
 		//sphere->applyMaterial("Examples/Beachstones");
 		//Ogre::SceneNode* headNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Sphere");
 		//Ogre::Entity* sphere = mSceneMgr->createEntity("SphereEntity", Ogre::SceneManager::PT_SPHERE); //PT_SPHERE radius = 100
@@ -247,9 +252,13 @@ bool ICGAppFrame::SetupScene()
 		*/// Set ambient light
 		mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 
+		Ogre::ParticleSystem* particleSystem = mSceneMgr->createParticleSystem("explosions", "Examples/Smoke");
+		particleSystem->fastForward(10.0);
+		sphere->getSceneNode()->attachObject(particleSystem);
 		// Create a light
-		//Ogre::Light* MainLight = mSceneMgr->createLight("MainLight");
-		//MainLight->setPosition(20,80,50);
+		Ogre::Light* MainLight = mSceneMgr->createLight("MainLight");
+		MainLight->setPosition(20,80,50);
+		MainLight->setDiffuseColour(Ogre::ColourValue(1,1,1));
 		//-------------------------------------------------------------------------------------
 	}
 
@@ -270,7 +279,8 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	{
 		return false;
 	}
-
+	dynamicsWorld->stepSimulation(1/60.f, 10);
+	World::getInstance()->stepSimulation();
 	//Need to capture/update each device
 	mKeyboardInput->capture();
 	mMouseInput->capture();
@@ -295,7 +305,6 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	if (mKey_D) {
 		mCamera->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree(-0.2)));
 	}
-
 	return true;
 }
 
