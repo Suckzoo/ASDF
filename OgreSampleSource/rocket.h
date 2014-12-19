@@ -39,8 +39,5 @@ public:
 		rigidBody = new btRigidBody(rigidCI);
 		ICGAppFrame::getInstance()->addToDynamicsWorld(rigidBody);//register the rigidbody
 	}
-	~Rocket()
-	{
-	}
 };
 #endif
