@@ -31,11 +31,11 @@ public:
 		scaleZ = _scaleZ;
 		rocketMass = _rocketMass;
 		//set a rigidbody which is used for collision detection. 
-		shape = new btBoxShape(btVector3(scaleX,scaleY,scaleZ));//box collision shape
+		shape = new btBoxShape(btVector3(1.1*scaleX/100.0,1.05*scaleY/100.0,6.0*scaleZ/100.0));//box collision shape
 		motionstate = new btDefaultMotionState(btTransform(rotation, position));//set motion
 
 		btVector3 localInertia;
-		shape->calculateLocalInertia(0, localInertia);
+		shape->calculateLocalInertia(rocketMass, localInertia);
 
 		btRigidBody::btRigidBodyConstructionInfo rigidCI(rocketMass, motionstate, shape, localInertia);
 		rigidBody = new btRigidBody(rigidCI);
