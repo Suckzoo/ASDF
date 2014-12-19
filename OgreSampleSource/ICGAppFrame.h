@@ -82,6 +82,7 @@ public:
 		return instance;
 	}
 	Ogre::SceneManager* getSceneMgr() {return mSceneMgr;}
+	void removeObjectFromDynamicsWorld(btRigidBody* _obj) {dynamicsWorld->removeRigidBody(_obj);}
 	void addToDynamicsWorld(btRigidBody* _obj) {dynamicsWorld->addRigidBody(_obj);}
 	/** Upper-most method directly called from WinMain */
 	bool go(void);
