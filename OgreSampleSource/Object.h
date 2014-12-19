@@ -79,6 +79,7 @@ public:
 	}
 	void stepSimulation()
 	{
+		rigidBody->activate(true);
 		btTransform trans;
 		rigidBody->getMotionState()->getWorldTransform(trans);
 		btVector3 pos = trans.getOrigin();

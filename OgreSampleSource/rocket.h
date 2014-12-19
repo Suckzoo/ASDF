@@ -26,6 +26,8 @@ public:
 		
 		//set scale
 		sceneNode->setScale(_scaleX/100.0, _scaleY/100.0, _scaleZ/100.0);
+		sceneNode->setPosition(position.x(), position.y(), position.z());
+		sceneNode->setOrientation(rotation.w(), rotation.x(), rotation.y(), rotation.z());
 		scaleX = _scaleX;
 		scaleY = _scaleY;
 		scaleZ = _scaleZ;
@@ -40,6 +42,11 @@ public:
 		btRigidBody::btRigidBodyConstructionInfo rigidCI(rocketMass, motionstate, shape, localInertia);
 		rigidBody = new btRigidBody(rigidCI);
 		ICGAppFrame::getInstance()->addToDynamicsWorld(rigidBody);//register the rigidbody
+	}
+
+	btVector3 getLinearVelocity()
+	{
+		return rigidBody->getLinearVelocity();
 	}
 };
 #endif

@@ -14,12 +14,14 @@ private:
 	static World* instance;
 	World();
 	list <shared_ptr<Object> > m_pWorld;
-	shared_ptr<Rocket> m_pLaunchedRocket;
+	list<shared_ptr<Object>>::iterator m_pLaunchedRocket;
+	bool isRocketLaunched;
 public:
 	static World* getInstance();
 	void addObject(Object* object);
 	void stepSimulation();
-	void launchRocket(Rocket* rocket);
+	void registerRocket(Rocket* rocket);
+	void launchRocket();
 	void destroyRocket();
 };
 #endif

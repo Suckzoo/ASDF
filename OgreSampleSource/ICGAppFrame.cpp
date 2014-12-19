@@ -36,8 +36,10 @@ ICGAppFrame::ICGAppFrame(void)
 	, mKey_S(false)
 	, mKey_A(false)
 	, mKey_D(false)
+	, mKey_Space(false)
 	, mCameraNearClipDistance(1.0f)
 	, dynamicsWorld(nullptr)
+	, launchTrial(0)
 {
 
 }
@@ -235,9 +237,12 @@ bool ICGAppFrame::SetupScene()
 		sphere->applyMaterial("Examples/BeachStones");
 		//sphere->setPosition(0,0,0);
 		World::getInstance()->addObject(sphere);
-		Rocket* rocket = new Rocket("RocketNode1",500,500,500,10,btVector3(-100,0,0));
+		Rocket* rocket = new Rocket("RocketNode", 500,500,500,10,btVector3(-1000,0,0));
+		World::getInstance()->registerRocket(rocket);
 		//rocket->setPosition(-200,0,0);
-		World::getInstance()->addObject(rocket);
+		//World::getInstance()->addObject(rocket);
+
+		//World::getInstance()->launchRocket(rocket);
 		
 		/*sphere->applyMaterial("Examples/Beachstones");
 		Ogre::SceneNode* headNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Sphere");
@@ -270,7 +275,6 @@ bool ICGAppFrame::SetupScene()
 bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
 	// Use evt.timeSinceLastFrame for updating dynamic objects/events
-
 	if(mWindow->isClosed())
 	{
 		return false;
@@ -309,6 +313,9 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 		//mCamera->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree(-0.2)));
 		//mCamera->rotate(Ogre::Quaternion(Ogre::Math::Cos(Ogre::Radian(Ogre::Degree(-0.1))), 0, Ogre::Math::Sin(Ogre::Radian(Ogre::Degree(-0.1))), 0));
 		mCamera->rotate(mCamera->getRealUp(), Ogre::Radian(Ogre::Degree(-0.2)));
+	}
+	if (mKey_Space) {
+		World::getInstance()->launchRocket();
 	}
 	//Sleep(1000.0/60.0);
 	return true;
@@ -373,7 +380,9 @@ bool ICGAppFrame::keyPressed( const OIS::KeyEvent &arg )
 	if(arg.key == OIS::KC_D) {
 		mKey_D = true;
 	}
-
+	if(arg.key == OIS::KC_SPACE) {
+		mKey_Space = true;
+	}
 	return true;
 }
 
@@ -390,6 +399,9 @@ bool ICGAppFrame::keyReleased( const OIS::KeyEvent &arg )
 	}
 	if(arg.key == OIS::KC_D) {
 		mKey_D = false;
+	}
+	if(arg.key == OIS::KC_SPACE) {
+		mKey_Space = false;
 	}
 	return true;
 }
