@@ -12,8 +12,8 @@ protected:
 public:
 	Sphere(Ogre::String nodeName, double _radius = 100)
 	{
-		sceneNode = ICGAppFrame::getInstance()->getSceneMgr()->getRootSceneNode()->createChildSceneNode(nodeName+"Node");
-		entity = ICGAppFrame::getInstance()->getSceneMgr()->createEntity(nodeName+"Entity", Ogre::SceneManager::PT_SPHERE);
+		sceneNode = ICGAppFrame::getInstance()->getSceneMgr()->getRootSceneNode()->createChildSceneNode(nodeName+"SphereNode");
+		entity = ICGAppFrame::getInstance()->getSceneMgr()->createEntity(nodeName+"SphereEntity", Ogre::SceneManager::PT_SPHERE);
 		sceneNode->attachObject(entity);
 		sceneNode->setScale(_radius/100.0, _radius/100.0, _radius/100.0);
 		radius = _radius;

@@ -12,8 +12,8 @@ protected:
 public:
 	Box(Ogre::String nodeName, double halfExtentX = 100, double halfExtentY = 100, double halfExtentZ = 100)
 	{
-		sceneNode = ICGAppFrame::getInstance()->getSceneMgr()->getRootSceneNode()->createChildSceneNode(nodeName);
-		entity = ICGAppFrame::getInstance()->getSceneMgr()->createEntity("SphereEntity", Ogre::SceneManager::PT_CUBE);
+		sceneNode = ICGAppFrame::getInstance()->getSceneMgr()->getRootSceneNode()->createChildSceneNode(nodeName+"BoxNode");
+		entity = ICGAppFrame::getInstance()->getSceneMgr()->createEntity(nodeName+"BoxEntity", Ogre::SceneManager::PT_CUBE);
 		sceneNode->attachObject(entity);
 		btVector3 halfExtents = btVector3(halfExtentX, halfExtentY, halfExtentZ);
 		btBoxShape* shape = new btBoxShape(halfExtents);
