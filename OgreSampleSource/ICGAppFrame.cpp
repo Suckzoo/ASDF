@@ -251,8 +251,9 @@ bool ICGAppFrame::SetupScene()
 		mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 
 		// Create a light
-		//Ogre::Light* MainLight = mSceneMgr->createLight("MainLight");
-		//MainLight->setPosition(20,80,50);
+		Ogre::Light* MainLight = mSceneMgr->createLight("MainLight");
+		MainLight->setPosition(20,80,50);
+		MainLight->setDiffuseColour(Ogre::ColourValue(1,1,1));
 		//-------------------------------------------------------------------------------------
 	}
 
