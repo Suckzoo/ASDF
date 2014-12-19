@@ -33,14 +33,14 @@ void World::stepSimulation()
 
 	//TODO end
 }
-//
-//void World::launchRocket(Rocket* rocket)
-//{
-//	m_pLaunchedRocket.reset(rocket);
-//}
-//
-//void World::destroyRocket()
-//{
-//	ICGAppFrame::getInstance()->deleteFromDynamicsWorld(m_pLaunchedRocket.get()->getRigidBody());
-//	m_pLaunchedRocket.reset();
-//}
+
+void World::launchRocket(Rocket* rocket)
+{
+	m_pLaunchedRocket.reset(rocket);
+}
+
+void World::destroyRocket()
+{
+	ICGAppFrame::getInstance()->deleteFromDynamicsWorld(m_pLaunchedRocket.get()->getRigidBody());
+	m_pLaunchedRocket.reset();
+}
