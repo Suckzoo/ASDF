@@ -234,7 +234,6 @@ bool ICGAppFrame::SetupScene()
 		sphere->setPosition(0,0,0);
 		World::getInstance()->addObject(sphere);
 		Rocket* rocket = new Rocket("RocketNode1",500,500,500,10);
-	//	rocket->applyMaterial("rocket.material");
 		rocket->setPosition(-100,0,0);
 		World::getInstance()->addObject(rocket);
 		
@@ -252,8 +251,9 @@ bool ICGAppFrame::SetupScene()
 		mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 
 		// Create a light
-		//Ogre::Light* MainLight = mSceneMgr->createLight("MainLight");
-		//MainLight->setPosition(20,80,50);
+		Ogre::Light* MainLight = mSceneMgr->createLight("MainLight");
+		MainLight->setPosition(20,80,50);
+		MainLight->setDiffuseColour(Ogre::ColourValue(1,1,1));
 		//-------------------------------------------------------------------------------------
 	}
 
