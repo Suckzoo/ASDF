@@ -237,7 +237,7 @@ bool ICGAppFrame::SetupScene()
 		sphere->applyMaterial("Examples/BeachStones");
 		//sphere->setPosition(0,0,0);
 		World::getInstance()->addObject(sphere);
-		Rocket* rocket = new Rocket("RocketNode", 500,500,500,10,btVector3(-1000,0,0));
+		Rocket* rocket = new Rocket("RocketNode", 11,60,11,10,btVector3(0,0,500),btQuaternion(-(double)sqrt(2.0), 0, 0, (double)sqrt(2.0)));
 		World::getInstance()->registerRocket(rocket);
 		//rocket->setPosition(-200,0,0);
 		//World::getInstance()->addObject(rocket);

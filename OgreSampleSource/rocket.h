@@ -23,9 +23,14 @@ public:
 		//set a entity: the visual shape
 		entity = ICGAppFrame::getInstance()->getSceneMgr()->createEntity(nodeName+"Entity",gRocketMeshName);
 		sceneNode->attachObject(entity);
-		
+		Ogre::AxisAlignedBox refbox = entity->getBoundingBox();
+		Ogre::Vector3 aabbsize = refbox.getMaximum() - refbox.getMinimum();
+		Ogre::Real xx = aabbsize.x;
+		Ogre::Real yy = aabbsize.y;
+		Ogre::Real zz = aabbsize.z;
 		//set scale
-		sceneNode->setScale(_scaleX/100.0, _scaleY/100.0, _scaleZ/100.0);
+
+		sceneNode->setScale(_scaleX/xx, _scaleY/yy, _scaleZ/zz);
 		sceneNode->setPosition(position.x(), position.y(), position.z());
 		sceneNode->setOrientation(rotation.w(), rotation.x(), rotation.y(), rotation.z());
 		scaleX = _scaleX;
@@ -33,7 +38,7 @@ public:
 		scaleZ = _scaleZ;
 		rocketMass = _rocketMass;
 		//set a rigidbody which is used for collision detection. 
-		shape = new btBoxShape(btVector3(1.1*scaleX/100.0,1.05*scaleY/100.0,6.0*scaleZ/100.0));//box collision shape
+		shape = new btBoxShape(btVector3(scaleX, scaleY, scaleZ));//box collision shape
 		motionstate = new btDefaultMotionState(btTransform(rotation, position));//set motion
 
 		btVector3 localInertia;
