@@ -34,10 +34,16 @@ ICGAppFrame::ICGAppFrame(void)
 	, mMouse_L(false)
 	, mKey_W(false)
 	, mKey_S(false)
+	, accelFRMove(0.0)
 	, mKey_A(false)
 	, mKey_D(false)
+	, accelLRRotate(1.0)
 	, mKey_Q(false)
 	, mKey_E(false)
+	, accelLRMove(2.0)
+	, mKey_Z(false)
+	, mKey_C(false)
+	, accelZRotate(3.0)
 	, mCameraNearClipDistance(1.0f)
 	, dynamicsWorld(nullptr)
 {
@@ -197,6 +203,10 @@ bool ICGAppFrame::InitSystem()
 	mTrayMgr = new ICGOgreBites::SdkTrayManager("InterfaceName", mWindow, mMouseInput, this);
 	mTrayMgr->showFrameStats(ICGOgreBites::TL_BOTTOMLEFT);
 	mTrayMgr->showLogo(ICGOgreBites::TL_BOTTOMRIGHT);
+	mTrayMgr->setAccelFRMove(accelFRMove);
+	mTrayMgr->setAccelLRRotate(accelLRRotate);
+	mTrayMgr->setAccelLRMove(accelLRMove);
+	mTrayMgr->setAccelZRotate(accelZRotate);
 
 	mTheRoot->addFrameListener(this);
 
@@ -314,6 +324,12 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	if (mKey_E) {
 		mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection().crossProduct(mCamera->getRealUp())*0.2);
 	}
+	if (mKey_Z) {
+		mCamera->rotate(mCamera->getRealDirection(), Ogre::Radian(Ogre::Degree(0.1)));
+	}
+	if (mKey_C) {
+		mCamera->rotate(mCamera->getRealDirection(), Ogre::Radian(Ogre::Degree(-0.1)));
+	}
 	//Sleep(1000.0/60.0);
 	return true;
 }
@@ -383,6 +399,12 @@ bool ICGAppFrame::keyPressed( const OIS::KeyEvent &arg )
 	if(arg.key == OIS::KC_E) {
 		mKey_E = true;
 	}
+	if(arg.key == OIS::KC_Z) {
+		mKey_Z = true;
+	}
+	if(arg.key == OIS::KC_C) {
+		mKey_C = true;
+	}
 
 	return true;
 }
@@ -406,6 +428,12 @@ bool ICGAppFrame::keyReleased( const OIS::KeyEvent &arg )
 	}
 	if(arg.key == OIS::KC_E) {
 		mKey_E = false;
+	}
+	if(arg.key == OIS::KC_Z) {
+		mKey_Z = false;
+	}
+	if(arg.key == OIS::KC_C) {
+		mKey_C = false;
 	}
 	return true;
 }

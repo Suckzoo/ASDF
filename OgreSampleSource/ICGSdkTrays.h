@@ -1709,8 +1709,16 @@ namespace ICGOgreBites
 	=============================================================================*/
 	class SdkTrayManager : public SdkTrayListener, public Ogre::ResourceGroupListener
     {
+	private:
+		Ogre::Real accelFRMove;
+		Ogre::Real accelLRRotate;
+		Ogre::Real accelLRMove;
+		Ogre::Real accelZRotate;
     public:
-
+		void setAccelFRMove(Ogre::Real l) {accelFRMove = l;}
+		void setAccelLRRotate(Ogre::Real l) {accelLRRotate = l;}
+		void setAccelLRMove(Ogre::Real l) {accelLRMove = l;}
+		void setAccelZRotate(Ogre::Real l) {accelZRotate = l;}
 		/*-----------------------------------------------------------------------------
 		| Creates backdrop, cursor, and trays.
 		-----------------------------------------------------------------------------*/
@@ -2235,6 +2243,10 @@ namespace ICGOgreBites
 				stats.push_back("Worst FPS");
 				stats.push_back("Triangles");
 				stats.push_back("Batches");
+				stats.push_back("test1");
+				stats.push_back("test2");
+				stats.push_back("test3");
+				stats.push_back("test4");
 
 				mFpsLabel = createLabel(TL_NONE, mName + "/FpsLabel", "FPS:", 180);
 				mFpsLabel->_assignListener(this);
@@ -2811,7 +2823,12 @@ namespace ICGOgreBites
 
 					str = Ogre::StringConverter::toString(stats.batchCount);
 					for (int i = str.length() - 3; i > 0; i -= 3) { str.insert(i, 1, ','); }
-					values.push_back(str + " insert?");
+					values.push_back(str);
+					
+					values.push_back(Ogre::StringConverter::toString(accelFRMove));
+					values.push_back(Ogre::StringConverter::toString(accelLRRotate));
+					values.push_back(Ogre::StringConverter::toString(accelLRMove));
+					values.push_back(Ogre::StringConverter::toString(accelZRotate));
 
 					mStatsPanel->setAllParamValues(values);
 				}
