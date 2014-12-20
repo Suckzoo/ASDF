@@ -23,5 +23,9 @@ public:
 	void registerRocket(Rocket* rocket);
 	void launchRocket();
 	void destroyRocket();
+	bool isRocketFired();
+	void reloadRocket();
+	Ogre::Vector3 getRocketPosition();
+	Ogre::Quaternion getRocketOrientation();
 };
 #endif

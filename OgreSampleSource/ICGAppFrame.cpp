@@ -225,20 +225,21 @@ bool ICGAppFrame::SetupScene()
 {
 	// Position it at 500 in Z direction
 	dynamicsWorld->setGravity(btVector3(0,0,0));
-	mCamera->setPosition(Ogre::Vector3(0,0,500));
+	mCamera->setPosition(Ogre::Vector3(20,0,0));
 	// Look back along -Z
-	mCamera->lookAt(Ogre::Vector3(0,0,0));
+	mCamera->lookAt(Ogre::Vector3(0,0,500));
 	// This block will be the practice task for today
 	{
 		mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox");
 		//-------------------------------------------------------------------------------------
 		// Create the scene
-		Sphere* sphere = new Sphere("SphereNode1");
+		Sphere* sphere = new Sphere("SphereNode1",100,btVector3(0,0,500));
 		sphere->applyMaterial("Examples/BeachStones");
 		//sphere->setPosition(0,0,0);
 		World::getInstance()->addObject(sphere);
-		Rocket* rocket = new Rocket("RocketNode", 11,60,11,10,btVector3(0,0,500),btQuaternion(-(double)sqrt(2.0), 0, 0, (double)sqrt(2.0)));
-		World::getInstance()->registerRocket(rocket);
+		World::getInstance()->reloadRocket();
+		//Rocket* rocket = new Rocket("RocketNode", 11,60,11,10,btVector3(0,0,0),btQuaternion((double)sqrt(2.0), 0, 0, (double)sqrt(2.0)));
+		//World::getInstance()->registerRocket(rocket);
 		//rocket->setPosition(-200,0,0);
 		//World::getInstance()->addObject(rocket);
 

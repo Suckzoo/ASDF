@@ -33,6 +33,7 @@ public:
 		sceneNode->setScale(_scaleX/xx, _scaleY/yy, _scaleZ/zz);
 		sceneNode->setPosition(position.x(), position.y(), position.z());
 		sceneNode->setOrientation(rotation.w(), rotation.x(), rotation.y(), rotation.z());
+		
 		scaleX = _scaleX;
 		scaleY = _scaleY;
 		scaleZ = _scaleZ;
