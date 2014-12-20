@@ -10,15 +10,19 @@ class Sphere : public Object
 protected:
 	Ogre::Real radius;
 public:
-	Sphere(Ogre::String nodeName, double _radius = 100)
+	Sphere(Ogre::String nodeName, double _radius = 100,
+		btVector3 position = btVector3(0,0,0), btQuaternion rotation = btQuaternion(0,0,0,1))
 	{
-		sceneNode = ICGAppFrame::getInstance()->getSceneMgr()->getRootSceneNode()->createChildSceneNode(nodeName+"Node");
-		entity = ICGAppFrame::getInstance()->getSceneMgr()->createEntity(nodeName+"Entity", Ogre::SceneManager::PT_SPHERE);
+		sceneNode = ICGAppFrame::getInstance()->getSceneMgr()->getRootSceneNode()->createChildSceneNode(nodeName+"SphereNode");
+		entity = ICGAppFrame::getInstance()->getSceneMgr()->createEntity(nodeName+"SphereEntity", Ogre::SceneManager::PT_SPHERE);
 		sceneNode->attachObject(entity);
-		sceneNode->setScale(_radius/100.0, _radius/100.0, _radius/100.0);
+		Ogre::Real refradius = entity->getBoundingRadius();
+		sceneNode->setScale(_radius/refradius, _radius/refradius, _radius/refradius);
+		sceneNode->setPosition(position.x(), position.y(), position.z());
+		sceneNode->setOrientation(rotation.w(), rotation.x(), rotation.y(), rotation.z());
 		radius = _radius;
 		shape = new btSphereShape(radius);
-		motionstate = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(0,0,0)));
+		motionstate = new btDefaultMotionState(btTransform(rotation, position));
 		btVector3 localInertia;
 		shape->calculateLocalInertia(0, localInertia);
 		btRigidBody::btRigidBodyConstructionInfo rigidCI(0, motionstate, shape, localInertia);

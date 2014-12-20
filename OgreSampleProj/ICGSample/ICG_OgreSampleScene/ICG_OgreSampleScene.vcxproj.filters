@@ -50,5 +50,8 @@
     <ClInclude Include="..\..\..\OgreSampleSource\Sphere.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\OgreSampleSource\Box.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

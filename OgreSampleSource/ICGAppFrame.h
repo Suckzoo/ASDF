@@ -24,6 +24,8 @@ Computer Graphics and Visualization Lab @ KAIST
 
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
+#include <exception>
+using std::exception;
 
 /**
  * ICGAppFrame 
@@ -38,7 +40,7 @@ private:
 	ICGAppFrame(void);
 
 protected:
-
+	
 	Ogre::Root *mTheRoot;
 	Ogre::Camera* mCamera;
 	Ogre::SceneManager* mSceneMgr;
@@ -55,6 +57,7 @@ protected:
 	bool mKey_S;
 	bool mKey_A;
 	bool mKey_D;
+	bool mKey_Space;
 
 	// OIS Input devices
 	OIS::InputManager* mInputManager;
@@ -71,6 +74,7 @@ protected:
 
 	btDiscreteDynamicsWorld* dynamicsWorld;
 
+	int launchTrial;
 public:
 	virtual ~ICGAppFrame(void);
 	static ICGAppFrame* getInstance()
@@ -84,6 +88,18 @@ public:
 	Ogre::SceneManager* getSceneMgr() {return mSceneMgr;}
 	void removeObjectFromDynamicsWorld(btRigidBody* _obj) {dynamicsWorld->removeRigidBody(_obj);}
 	void addToDynamicsWorld(btRigidBody* _obj) {dynamicsWorld->addRigidBody(_obj);}
+	void deleteFromDynamicsWorld(btRigidBody* _obj)
+	{
+		dynamicsWorld->removeRigidBody(_obj);
+	}
+	const int getNumTrial()
+	{
+		return launchTrial;
+	}
+	void trialFailed()
+	{
+		launchTrial++;
+	}
 	/** Upper-most method directly called from WinMain */
 	bool go(void);
 
