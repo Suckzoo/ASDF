@@ -116,6 +116,7 @@ void World::registerRocket(Rocket* rocket)
 }
 void World::launchRocket()
 {
+	(*m_pLaunchedRocket).get()->getRigidBody()->activate();
 	(*m_pLaunchedRocket).get()->getRigidBody()->setLinearVelocity(btVector3(0,0,50));
 	isRocketLaunched = true;	
 }
