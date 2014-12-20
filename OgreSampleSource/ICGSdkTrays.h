@@ -2811,7 +2811,7 @@ namespace ICGOgreBites
 
 					str = Ogre::StringConverter::toString(stats.batchCount);
 					for (int i = str.length() - 3; i > 0; i -= 3) { str.insert(i, 1, ','); }
-					values.push_back(str);
+					values.push_back(str + " insert?");
 
 					mStatsPanel->setAllParamValues(values);
 				}

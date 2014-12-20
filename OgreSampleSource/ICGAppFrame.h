@@ -57,6 +57,8 @@ protected:
 	bool mKey_S;
 	bool mKey_A;
 	bool mKey_D;
+	bool mKey_Q;
+	bool mKey_E;
 
 	// OIS Input devices
 	OIS::InputManager* mInputManager;
