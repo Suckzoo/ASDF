@@ -32,6 +32,11 @@ public:
 		Ogre::Real xx = aabbsize.x;
 		Ogre::Real yy = aabbsize.y;
 		Ogre::Real zz = aabbsize.z;
+		scaleX = _scaleX;
+		scaleY = _scaleY;
+		scaleZ = _scaleZ;
+		rocketMass = _rocketMass;
+		sceneNode->setScale(scaleX/xx, scaleY/yy, scaleZ/zz);
 		//set scale
 		helperNode->setScale(0.01,0.0001,0.0001); //scale : Full extent of box!
 		helperNode->setOrientation(0,0,0,1);
@@ -39,10 +44,6 @@ public:
 		
 		rocketTail = ICGAppFrame::getInstance()->getSceneMgr()->createParticleSystem("rocketTail", "Examples/JetEngine2");
 		helperNode->attachObject(rocketTail);
-		scaleX = _scaleX;
-		scaleY = _scaleY;
-		scaleZ = _scaleZ;
-		rocketMass = _rocketMass;
 		//set a rigidbody which is used for collision detection. 
 		shape = new btBoxShape(btVector3(scaleX/2, scaleY/2, scaleZ/2));//box collision shape
 		motionstate = new btDefaultMotionState(btTransform(rotation, position));//set motion
