@@ -78,7 +78,7 @@ void World::stepSimulation()
 		Ogre::Quaternion q;
 		Ogre::Vector3 refVector(0,1,0);
 		Ogre::Vector3 velocity(v.x(), v.y(), v.z());
-		Ogre::Real d = refVector.dotProduct(velocity);
+		Ogre::Real d = refVector.dotProduct(velocity)/velocity.length();
 		if(velocity.length()>0.0001) {
 			velocity /= velocity.length();
 			if(d>0.999999) {

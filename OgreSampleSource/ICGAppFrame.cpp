@@ -314,7 +314,7 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 		return false;
 	}
 	if (mKey_Space) {
-		if(!World::getInstance()->isRocketFired()) {
+		if(!World::getInstance()->isRocketFired() && viewMode) {
 			Ogre::Vector3 direction = mCamera->getDirection();
 			btVector3 btDirection(direction.x, direction.y, direction.z);
 			World::getInstance()->launchRocket(btDirection);
