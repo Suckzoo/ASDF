@@ -1709,8 +1709,14 @@ namespace ICGOgreBites
 	=============================================================================*/
 	class SdkTrayManager : public SdkTrayListener, public Ogre::ResourceGroupListener
     {
+	private:
+		Ogre::Real xCamera;
+		Ogre::Real yCamera;
+		Ogre::Real zCamera;
     public:
-
+		void setXCamera(Ogre::Real l) {xCamera = l;}
+		void setYCamera(Ogre::Real l) {yCamera = l;}
+		void setZCamera(Ogre::Real l) {zCamera = l;}
 		/*-----------------------------------------------------------------------------
 		| Creates backdrop, cursor, and trays.
 		-----------------------------------------------------------------------------*/
@@ -2235,6 +2241,9 @@ namespace ICGOgreBites
 				stats.push_back("Worst FPS");
 				stats.push_back("Triangles");
 				stats.push_back("Batches");
+				stats.push_back("xCamera");
+				stats.push_back("yCamera");
+				stats.push_back("zCamera");
 
 				mFpsLabel = createLabel(TL_NONE, mName + "/FpsLabel", "FPS:", 180);
 				mFpsLabel->_assignListener(this);
@@ -2812,6 +2821,10 @@ namespace ICGOgreBites
 					str = Ogre::StringConverter::toString(stats.batchCount);
 					for (int i = str.length() - 3; i > 0; i -= 3) { str.insert(i, 1, ','); }
 					values.push_back(str);
+					
+					values.push_back(Ogre::StringConverter::toString(xCamera));
+					values.push_back(Ogre::StringConverter::toString(yCamera));
+					values.push_back(Ogre::StringConverter::toString(zCamera));
 
 					mStatsPanel->setAllParamValues(values);
 				}
