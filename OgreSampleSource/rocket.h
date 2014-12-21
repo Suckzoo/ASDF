@@ -31,11 +31,12 @@ public:
 		//set a entity: the visual shape
 		//entity = ICGAppFrame::getInstance()->getSceneMgr()->createEntity(nodeName+"Entity",Ogre::SceneManager::PT_CUBE);
 		//set scale
-		helperNode->setScale(0.000001,0.000001,0.000001);
-		helperNode->setOrientation(0,0,0,1);
-		helperNode->setPosition(0,-10,0);
+		helperNode->setScale(0.001,0.001,0.001);
+		helperNode->setOrientation(0,0,0,-1);
+		helperNode->setPosition(0,-5,0);
 		
-		rocketTail = ICGAppFrame::getInstance()->getSceneMgr()->createParticleSystem("rocketTail", "Examples/PurpleFountain");
+		rocketTail = ICGAppFrame::getInstance()->getSceneMgr()->createParticleSystem("rocketTail", "Examples/MyJetEngine");
+//		rocketTail->setSpeedFactor(0.1); 
 		helperNode->attachObject(rocketTail);
 
 		scaleX = _scaleX;
