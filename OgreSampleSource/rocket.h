@@ -42,7 +42,11 @@ public:
 		helperNode->setOrientation(0,0,0,1);
 		helperNode->setPosition(0,0,0);
 		
-		rocketTail = ICGAppFrame::getInstance()->getSceneMgr()->createParticleSystem("rocketTail", "Examples/MyJetEngine");
+		rocketTail = ICGAppFrame::getInstance()->getSceneMgr()->createParticleSystem("rocketTail", "Examples/JetEngine2");
+		rocketTail->setParameter("particle_width","7");
+		rocketTail->setParameter("particle_height","7");
+		rocketTail->getEmitter(0)->setParameter("time_to_live","0.5");
+		rocketTail->getEmitter(0)->setParameter("direction","0 0 0");
 		helperNode->attachObject(rocketTail);
 		//set a rigidbody which is used for collision detection. 
 		shape = new btBoxShape(btVector3(scaleX/2, scaleY/2, scaleZ/2));//box collision shape
