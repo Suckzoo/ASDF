@@ -48,6 +48,7 @@ ICGAppFrame::ICGAppFrame(void)
 	, mKey_C(false)
 	, accelZRotate(1.0f)
 	, vZRotate(0.0f)
+	, mKey_Space(false)
 	, mCameraNearClipDistance(1.0f)
 	, dynamicsWorld(nullptr)
 {

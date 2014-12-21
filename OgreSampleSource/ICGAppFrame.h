@@ -68,6 +68,7 @@ protected:
 	bool mKey_C;
 	Ogre::Real accelZRotate;
 	Ogre::Real vZRotate;
+	bool mKey_Space;
 
 	// OIS Input devices
 	OIS::InputManager* mInputManager;
