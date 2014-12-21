@@ -253,11 +253,22 @@ bool ICGAppFrame::SetupScene()
 		mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox");
 		//-------------------------------------------------------------------------------------
 		// Create the scene
-		Sphere* sphere = new Sphere("SphereNode1",50,btVector3(0,0,500));
+		Sphere* sphere = new Sphere("Beach",50,btVector3(500,0,500));
 		sphere->applyMaterial("Examples/BeachStones");
 		sphere->setCastShadows(true);
-		//sphere->setPosition(0,0,0);
 		World::getInstance()->addObject(sphere);
+		sphere = new Sphere("Yee",50,btVector3(0,0,500));
+		sphere->applyMaterial("Examples/Yee");
+		sphere->setCastShadows(true);
+		World::getInstance()->addObject(sphere);
+		sphere = new Sphere("Nupjuk",50,btVector3(-500,0,500));
+		sphere->applyMaterial("Examples/Nupjuk");
+		sphere->setCastShadows(true);
+		World::getInstance()->addObject(sphere);
+		Box* box = new Box("Mystery", 50, 50, 50, btVector3(0,0,1000));
+		box->applyMaterial("Examples/MysteryBox");
+		box->setCastShadows(true);
+		World::getInstance()->addObject(box);
 		World::getInstance()->reloadRocket();
 		//Rocket* rocket = new Rocket("RocketNode", 11,60,11,10,btVector3(0,0,0),btQuaternion((double)sqrt(2.0), 0, 0, (double)sqrt(2.0)));
 		//World::getInstance()->registerRocket(rocket);
@@ -467,6 +478,10 @@ bool ICGAppFrame::keyPressed( const OIS::KeyEvent &arg )
 	return true;
 }
 
+void ICGAppFrame::Shutdown()
+{
+	mShutDown = true;
+}
 bool ICGAppFrame::keyReleased( const OIS::KeyEvent &arg )
 {
 	if(arg.key == OIS::KC_W) {

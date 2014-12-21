@@ -11,6 +11,7 @@ World::World()
 	, isRocketLaunched(false)
 	, isContactedWithPlanet(false)
 	, isContactedWithTarget(false)
+	, isExploding(false)
 {
 
 }
@@ -132,10 +133,34 @@ void World::destroyRocket()
 	Ogre::Vector3 p = m_pLaunchedRocket->get()->getPosition();
 	fprintf(simulLog, "Rocket destroyed : (%lf, %lf, %lf)\n", p.x, p.y, p.z);
 	//Kaboom()
+	if(!isExploding){
+		((Rocket*)((*m_pLaunchedRocket).get()))->deleteTailEffect();
+		Ogre::SceneManager* sceneMgr = ICGAppFrame::getInstance()->getSceneMgr();
+		Ogre::ParticleSystem* particleSystem1 = sceneMgr->createParticleSystem("ExplosionEffect1", "Examples/ModifiedFountain");
+		particleSystem1->fastForward(10.0);
+		(*m_pLaunchedRocket).get()->getSceneNode()->attachObject(particleSystem1);
+		Ogre::ParticleSystem* particleSystem2 = sceneMgr->createParticleSystem("ExplosionEffect2", "Examples/ModifiedSmoke");
+		particleSystem2->fastForward(10.0);
+		(*m_pLaunchedRocket).get()->getSceneNode()->attachObject(particleSystem2);
+		isExploding = true;
+		explosion_begin = explosion_end = clock();
+		return;
+	}
+	else if(explosion_end - explosion_begin < 5000){
+		explosion_end = clock();
+		return;
+	}
+	else{
+		isExploding = false;
+		ICGAppFrame::getInstance()->getSceneMgr()->destroyParticleSystem("ExplosionEffect1");
+		ICGAppFrame::getInstance()->getSceneMgr()->destroyParticleSystem("ExplosionEffect2");
+	}
+
 	if(isContactedWithTarget)
 	{
 		isContactedWithTarget = false;
 		isContactedWithPlanet = false;
+		ICGAppFrame::getInstance()->Shutdown();
 		//gameClear()
 	}
 	else if(isContactedWithPlanet)

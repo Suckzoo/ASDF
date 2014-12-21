@@ -16,6 +16,7 @@ public:
 		sceneNode = ICGAppFrame::getInstance()->getSceneMgr()->getRootSceneNode()->createChildSceneNode(nodeName+"BoxNode");
 		entity = ICGAppFrame::getInstance()->getSceneMgr()->createEntity(nodeName+"BoxEntity", Ogre::SceneManager::PT_CUBE);
 		sceneNode->attachObject(entity);
+		sceneNode->setPosition(position.x(), position.y(), position.z());
 		btVector3 halfExtents = btVector3(halfExtentX, halfExtentY, halfExtentZ);
 		btBoxShape* shape = new btBoxShape(halfExtents);
 		btDefaultMotionState *motionstate = new btDefaultMotionState(btTransform(rotation, position));
@@ -23,6 +24,7 @@ public:
 		shape->calculateLocalInertia(0, localInertia);
 		btRigidBody::btRigidBodyConstructionInfo rigidCI(0, motionstate, shape, localInertia);
 		rigidBody = new btRigidBody(rigidCI);
+		rigidBody->setUserIndex(3);
 		ICGAppFrame::getInstance()->addToDynamicsWorld(rigidBody);
 	}
 };

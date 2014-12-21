@@ -123,6 +123,7 @@ public:
 	void collisionCheck();
 	void processCamera();
 	void trackCamera();
+	void Shutdown();
 	/** Upper-most method directly called from WinMain */
 	bool go(void);
 

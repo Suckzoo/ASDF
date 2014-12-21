@@ -18,6 +18,8 @@ private:
 	bool isRocketLaunched;
 	bool isContactedWithPlanet;
 	bool isContactedWithTarget;
+	bool isExploding;
+	clock_t explosion_begin, explosion_end;
 
 public:
 	static World* getInstance();
