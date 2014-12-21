@@ -34,8 +34,20 @@ ICGAppFrame::ICGAppFrame(void)
 	, mMouse_L(false)
 	, mKey_W(false)
 	, mKey_S(false)
+	, accelFRMove(1.0f)
+	, vFRMove(0.0f)
 	, mKey_A(false)
 	, mKey_D(false)
+	, accelLRRotate(1.0f)
+	, vLRRotate(0.0f)
+	, mKey_Q(false)
+	, mKey_E(false)
+	, accelLRMove(1.0f)
+	, vLRMove(0.0f)
+	, mKey_Z(false)
+	, mKey_C(false)
+	, accelZRotate(1.0f)
+	, vZRotate(0.0f)
 	, mCameraNearClipDistance(1.0f)
 	, dynamicsWorld(nullptr)
 {
@@ -195,6 +207,9 @@ bool ICGAppFrame::InitSystem()
 	mTrayMgr = new ICGOgreBites::SdkTrayManager("InterfaceName", mWindow, mMouseInput, this);
 	mTrayMgr->showFrameStats(ICGOgreBites::TL_BOTTOMLEFT);
 	mTrayMgr->showLogo(ICGOgreBites::TL_BOTTOMRIGHT);
+	mTrayMgr->setXCamera(mCamera->getRealPosition().x);
+	mTrayMgr->setYCamera(mCamera->getRealPosition().y);
+	mTrayMgr->setZCamera(mCamera->getRealPosition().z);
 
 	mTheRoot->addFrameListener(this);
 
@@ -294,22 +309,70 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 	}
 	
-	if (mKey_W) {
-		mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection()*0.2);
+	Ogre::Real m_accelFRMove = 0.001*accelFRMove;
+	if (mKey_W && vFRMove < accelFRMove) vFRMove += 10*m_accelFRMove;
+	if (mKey_S && vFRMove > -accelFRMove) vFRMove -= 10*m_accelFRMove;
+	if (!(mKey_W ^ mKey_S)) {
+		if(vFRMove > 0) {
+			if(vFRMove < m_accelFRMove) vFRMove = 0.0f;
+			else vFRMove -= m_accelFRMove;
+		}
+		else if(vFRMove < 0) {
+			if(vFRMove > -m_accelFRMove) vFRMove = 0.0f;
+			else vFRMove += m_accelFRMove;
+		}
 	}
-	if (mKey_S) {
-		mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection()*-0.2);
+	if(vFRMove) mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection()*0.2*vFRMove);
+
+	Ogre::Real m_accelLRRotate = 0.001*accelLRRotate;
+	if (mKey_A && vLRRotate < accelLRRotate) vLRRotate += 10*m_accelLRRotate;
+	if (mKey_D && vLRRotate > -accelLRRotate) vLRRotate -= 10*m_accelLRRotate;
+	if (!(mKey_A ^ mKey_D)) {
+		if(vLRRotate > 0) {
+			if(vLRRotate < m_accelLRRotate) vLRRotate = 0.0f;
+			else vLRRotate -= m_accelLRRotate;
+		}
+		else if(vLRRotate < 0) {
+			if(vLRRotate > -m_accelLRRotate) vLRRotate = 0.0f;
+			else vLRRotate += m_accelLRRotate;
+		}
 	}
-	if (mKey_A) {
-		//mCamera->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree(0.2)));
-		//mCamera->rotate(Ogre::Quaternion(Ogre::Math::Cos(Ogre::Radian(Ogre::Degree(0.1))), 0, Ogre::Math::Sin(Ogre::Radian(Ogre::Degree(0.1))), 0));
-		mCamera->rotate(mCamera->getRealUp(), Ogre::Radian(Ogre::Degree(0.2)));
+	if(vLRRotate) mCamera->rotate(mCamera->getRealUp(), Ogre::Radian(Ogre::Degree(0.05*vLRRotate)));
+
+	Ogre::Real m_accelLRMove = 0.001*accelLRMove;
+	if (mKey_Q && vLRMove < accelLRMove) vLRMove += 10*m_accelLRMove;
+	if (mKey_E && vLRMove > -accelLRMove) vLRMove -= 10*m_accelLRMove;
+	if (!(mKey_Q ^ mKey_E)) {
+		if(vLRMove > 0) {
+			if(vLRMove < m_accelLRMove) vLRMove = 0.0f;
+			else vLRMove -= m_accelLRMove;
+		}
+		else if(vLRMove < 0) {
+			if(vLRMove > -m_accelLRMove) vLRMove = 0.0f;
+			else vLRMove += m_accelLRMove;
+		}
 	}
-	if (mKey_D) {
-		//mCamera->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree(-0.2)));
-		//mCamera->rotate(Ogre::Quaternion(Ogre::Math::Cos(Ogre::Radian(Ogre::Degree(-0.1))), 0, Ogre::Math::Sin(Ogre::Radian(Ogre::Degree(-0.1))), 0));
-		mCamera->rotate(mCamera->getRealUp(), Ogre::Radian(Ogre::Degree(-0.2)));
+	if(vLRMove) mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection().crossProduct(mCamera->getRealUp())*-0.2*vLRMove);
+
+	Ogre::Real m_accelZRotate = 0.001*accelZRotate;
+	if (mKey_Z && vZRotate < accelZRotate) vZRotate += 10*m_accelZRotate;
+	if (mKey_C && vZRotate > -accelZRotate) vZRotate -= 10*m_accelZRotate;
+	if (!(mKey_Z ^ mKey_C)) {
+		if(vZRotate > 0) {
+			if(vZRotate < m_accelZRotate) vZRotate = 0.0f;
+			else vZRotate -= m_accelZRotate;
+		}
+		else if(vZRotate < 0) {
+			if(vZRotate > -m_accelZRotate) vZRotate = 0.0f;
+			else vZRotate += m_accelZRotate;
+		}
 	}
+	if(vZRotate) mCamera->rotate(mCamera->getRealDirection(), Ogre::Radian(Ogre::Degree(0.1*vZRotate)));
+
+	mTrayMgr->setXCamera(mCamera->getRealPosition().x);
+	mTrayMgr->setYCamera(mCamera->getRealPosition().y);
+	mTrayMgr->setZCamera(mCamera->getRealPosition().z);
+
 	//Sleep(1000.0/60.0);
 	return true;
 }
@@ -323,7 +386,7 @@ bool ICGAppFrame::keyPressed( const OIS::KeyEvent &arg )
 
 	if (arg.key == OIS::KC_Z)   // toggle visibility of advanced frame stats
 	{
-		mTrayMgr->toggleAdvancedFrameStats();
+		//mTrayMgr->toggleAdvancedFrameStats();
 	}
 
 	if (arg.key == OIS::KC_R)   // cycle polygon rendering mode
@@ -373,6 +436,18 @@ bool ICGAppFrame::keyPressed( const OIS::KeyEvent &arg )
 	if(arg.key == OIS::KC_D) {
 		mKey_D = true;
 	}
+	if(arg.key == OIS::KC_Q) {
+		mKey_Q = true;
+	}
+	if(arg.key == OIS::KC_E) {
+		mKey_E = true;
+	}
+	if(arg.key == OIS::KC_Z) {
+		mKey_Z = true;
+	}
+	if(arg.key == OIS::KC_C) {
+		mKey_C = true;
+	}
 
 	return true;
 }
@@ -391,6 +466,18 @@ bool ICGAppFrame::keyReleased( const OIS::KeyEvent &arg )
 	if(arg.key == OIS::KC_D) {
 		mKey_D = false;
 	}
+	if(arg.key == OIS::KC_Q) {
+		mKey_Q = false;
+	}
+	if(arg.key == OIS::KC_E) {
+		mKey_E = false;
+	}
+	if(arg.key == OIS::KC_Z) {
+		mKey_Z = false;
+	}
+	if(arg.key == OIS::KC_C) {
+		mKey_C = false;
+	}
 	return true;
 }
 
@@ -402,11 +489,7 @@ bool ICGAppFrame::mouseMoved( const OIS::MouseEvent &arg )
 	}
 	if(mMouse_L) {
 		Ogre::Vector2 newPos = Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs);
-		//mCamera->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(Ogre::Degree(-0.1)*(newPos.x-pos.x)));
-		//mCamera->rotate(Ogre::Quaternion(Ogre::Math::Cos(Ogre::Radian(Ogre::Degree(-0.05)*(newPos.x-pos.x))), 0, Ogre::Math::Sin(Ogre::Radian(Ogre::Degree(-0.05)*(newPos.x-pos.x))), 0));
 		mCamera->rotate(mCamera->getRealUp(), Ogre::Radian(Ogre::Degree(-0.1)*(newPos.x-pos.x)));
-		//mCamera->rotate(Ogre::Vector3(1, 0, 0), Ogre::Radian(Ogre::Degree(-0.1)*(newPos.y-pos.y)));
-		//mCamera->rotate(Ogre::Quaternion(Ogre::Math::Cos(Ogre::Radian(Ogre::Degree(-0.05)*(newPos.y-pos.y))), Ogre::Math::Sin(Ogre::Radian(Ogre::Degree(-0.05)*(newPos.y-pos.y))), 0, 0));
 		mCamera->rotate(mCamera->getRealDirection().crossProduct(mCamera->getRealUp()), Ogre::Radian(Ogre::Degree(-0.1)*(newPos.y-pos.y)));
 		pos = newPos;
 	}

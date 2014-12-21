@@ -26,7 +26,6 @@ Computer Graphics and Visualization Lab @ KAIST
 #include <btBulletCollisionCommon.h>
 #include <exception>
 using std::exception;
-
 /**
  * ICGAppFrame 
  * Originated from MinimalOgre tutorial framework (http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Ogre+Wiki+Tutorial+Framework)
@@ -55,8 +54,20 @@ protected:
 	Ogre::Vector2 pos;
 	bool mKey_W;
 	bool mKey_S;
+	Ogre::Real accelFRMove;
+	Ogre::Real vFRMove;
 	bool mKey_A;
 	bool mKey_D;
+	Ogre::Real accelLRRotate;
+	Ogre::Real vLRRotate;
+	bool mKey_Q;
+	bool mKey_E;
+	Ogre::Real accelLRMove;
+	Ogre::Real vLRMove;
+	bool mKey_Z;
+	bool mKey_C;
+	Ogre::Real accelZRotate;
+	Ogre::Real vZRotate;
 
 	// OIS Input devices
 	OIS::InputManager* mInputManager;
