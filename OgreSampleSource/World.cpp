@@ -184,6 +184,11 @@ void World::setRocketOrientation(Ogre::Real w, Ogre::Real x, Ogre::Real y, Ogre:
 	m_pLaunchedRocket->get()->setOrientation(w, x, y, z);
 }
 
+Rocket* World::getRocket()
+{
+	return (Rocket*)(*m_pLaunchedRocket).get();
+}
+
 void World::contactedWithPlanet()
 {
 	isContactedWithPlanet = true;

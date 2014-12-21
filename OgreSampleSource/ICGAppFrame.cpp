@@ -345,6 +345,9 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 			processCamera();
 		}
 		break;
+	case FLYING:
+		trackCamera();
+		break;
 	default:
 		break;
 	}
@@ -492,6 +495,7 @@ bool ICGAppFrame::keyReleased( const OIS::KeyEvent &arg )
 	}
 	if(arg.key == OIS::KC_SPACE) {
 		mKey_Space = false;
+		phase = FLYING;
 	}
 	return true;
 }
@@ -674,6 +678,14 @@ void ICGAppFrame::processCamera()
 		}
 	}
 	if(vZRotate) mCamera->rotate(mCamera->getRealDirection(), Ogre::Radian(Ogre::Degree(0.1*vZRotate)));
+}
+
+void ICGAppFrame::trackCamera()
+{
+	Ogre::Vector3 offset = Ogre::Vector3(0.0f, 0.0f, -200.0f);
+	btVector3 rocketDir = World::getInstance()->getRocket()->getLinearVelocity();
+	mCamera->setPosition(World::getInstance()->getRocketPosition() + offset);
+	mCamera->setDirection(Ogre::Vector3(rocketDir.getX(), rocketDir.getY(), rocketDir.getZ()));
 }
 
 void ICGAppFrame::collisionCheck()
