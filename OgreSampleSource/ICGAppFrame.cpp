@@ -221,19 +221,22 @@ void ICGAppFrame::Cleanup()
 	mTheRoot = nullptr;
 }
 
+void ICGAppFrame::initCamera()
+{
+	mCamera->setPosition(Ogre::Vector3(0,0,0));
+	mCamera->lookAt(Ogre::Vector3(0,0,500));
+}
 bool ICGAppFrame::SetupScene()
 {
 	// Position it at 500 in Z direction
 	dynamicsWorld->setGravity(btVector3(0,0,0));
-	mCamera->setPosition(Ogre::Vector3(20,0,0));
-	// Look back along -Z
-	mCamera->lookAt(Ogre::Vector3(0,0,500));
+	initCamera();
 	// This block will be the practice task for today
 	{
 		mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox");
 		//-------------------------------------------------------------------------------------
 		// Create the scene
-		Sphere* sphere = new Sphere("SphereNode1",100,btVector3(0,0,500));
+		Sphere* sphere = new Sphere("SphereNode1",50,btVector3(0,0,500));
 		sphere->applyMaterial("Examples/BeachStones");
 		//sphere->setPosition(0,0,0);
 		World::getInstance()->addObject(sphere);
@@ -316,7 +319,7 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 		mCamera->rotate(mCamera->getRealUp(), Ogre::Radian(Ogre::Degree(-0.2)));
 	}
 	if (mKey_Space) {
-		World::getInstance()->launchRocket();
+		if(!World::getInstance()->isRocketFired()) World::getInstance()->launchRocket();
 	}
 	//Sleep(1000.0/60.0);
 	return true;
@@ -477,6 +480,96 @@ void ICGAppFrame::windowClosed(Ogre::RenderWindow* rw)
 		}
 	}	
 }
+
+void ICGAppFrame::collisionCheck()
+{
+	int numManifolds = dynamicsWorld->getDispatcher()->getNumManifolds();
+	for (int i=0;i<numManifolds;i++)
+	{
+		btPersistentManifold* contactManifold =  dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+		btCollisionObject* obA = (btCollisionObject*)contactManifold->getBody0();
+		btCollisionObject* obB = (btCollisionObject*)contactManifold->getBody1();
+
+		int numContacts = contactManifold->getNumContacts();
+		for (int j=0;j<numContacts;j++)
+		{
+			btManifoldPoint& pt = contactManifold->getContactPoint(j);
+			if (pt.getDistance()<=0.f)
+			{
+				if(obA->getUserIndex()==1)
+				{
+					if(obB->getUserIndex()==2)
+					{
+						World::getInstance()->contactedWithPlanet();
+					}
+				}
+				else if(obA->getUserIndex()==2)
+				{
+					if(obB->getUserIndex()==1)
+					{
+						World::getInstance()->contactedWithPlanet();
+					}
+					else if(obB->getUserIndex()==3)
+					{
+						World::getInstance()->contactedWithTarget();
+					}
+				}
+				else if(obA->getUserIndex()==3)
+				{
+					if(obB->getUserIndex()==2)
+					{
+						World::getInstance()->contactedWithTarget();
+					}
+				}
+				//const btVector3& ptA = pt.getPositionWorldOnA();
+				//const btVector3& ptB = pt.getPositionWorldOnB();
+				//const btVector3& normalOnB = pt.m_normalWorldOnB;
+			}
+		}
+	}
+}
+
+//void ICGAppFrame::collisionCheck(btRigidBody* rig1, btRigidBody* rig2)
+//{
+//	MyContactResultCallback callback;
+//	dynamicsWorld->contactPairTest(rig1, rig2, callback);
+//}
+//
+//btScalar MyContactResultCallback::addSingleResult(btManifoldPoint& cp,
+//		const btCollisionObjectWrapper* colObj0Wrap,
+//		int partId0,
+//		int index0,
+//		const btCollisionObjectWrapper* colObj1Wrap,
+//		int partId1,
+//		int index1)
+//{
+//	//colObj0Wrap->getCollisionObject()->getUserIndex();
+//	//User index guide :
+//	//1 is planet object.
+//	//2 is rocket launched.
+//	//3 is target.
+//	if(colObj0Wrap->getCollisionObject()->getUserIndex()==1) {
+//		if(colObj1Wrap->getCollisionObject()->getUserIndex()==2) {
+//			World::getInstance()->contactedWithPlanet();
+//		}
+//		//else if(colObj1Wrap->getCollisionObject()->getUserIndex()==2){
+//		//}
+//	} else if(colObj0Wrap->getCollisionObject()->getUserIndex()==2) {
+//		if(colObj1Wrap->getCollisionObject()->getUserIndex()==1) {
+//			World::getInstance()->contactedWithPlanet();
+//		}
+//		else if(colObj1Wrap->getCollisionObject()->getUserIndex()==3){
+//			World::getInstance()->contactedWithTarget();
+//		}
+//	} else if(colObj0Wrap->getCollisionObject()->getUserIndex()==3) {
+//		if(colObj1Wrap->getCollisionObject()->getUserIndex()==1) {
+//			World::getInstance()->contactedWithTarget();
+//		}
+//		//else if(colObj1Wrap->getCollisionObject()->getUserIndex()==1){
+//		//}
+//	}
+//	return 1.0f;
+//}
 
 // The place where things begin
 #define WIN32_LEAN_AND_MEAN

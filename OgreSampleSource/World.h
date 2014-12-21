@@ -16,6 +16,9 @@ private:
 	list <shared_ptr<Object> > m_pWorld;
 	list<shared_ptr<Object>>::iterator m_pLaunchedRocket;
 	bool isRocketLaunched;
+	bool isContactedWithPlanet;
+	bool isContactedWithTarget;
+
 public:
 	static World* getInstance();
 	void addObject(Object* object);
@@ -25,6 +28,8 @@ public:
 	void destroyRocket();
 	bool isRocketFired();
 	void reloadRocket();
+	void contactedWithPlanet();
+	void contactedWithTarget();
 	Ogre::Vector3 getRocketPosition();
 	Ogre::Quaternion getRocketOrientation();
 };
