@@ -122,6 +122,7 @@ public:
 	}
 	void collisionCheck();
 	void processCamera();
+	void processCameraZ();
 	void trackCamera();
 	void Shutdown();
 	/** Upper-most method directly called from WinMain */
