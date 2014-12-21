@@ -242,6 +242,8 @@ void ICGAppFrame::initCamera()
 {
 	mCamera->setPosition(Ogre::Vector3(0,0,0));
 	mCamera->lookAt(Ogre::Vector3(0,0,500));
+	cPos = mCamera->getRealPosition();
+	cDir = mCamera->getRealDirection();
 }
 bool ICGAppFrame::SetupScene()
 {
@@ -356,6 +358,9 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 		if(!viewMode) {
 			processCamera();
 		}
+		else {
+			processCameraZ();
+		}
 		break;
 	case FLYING:
 		trackCamera();
@@ -447,6 +452,8 @@ bool ICGAppFrame::keyPressed( const OIS::KeyEvent &arg )
 		World::getInstance()->contactedWithPlanet();
 	}
 	if(arg.key == OIS::KC_TAB) {
+		Ogre::Vector3 nPos = mCamera->getRealPosition();
+		Ogre::Vector3 nDir = mCamera->getRealDirection();
 		switch(phase) {
 		case BEFORE_LAUNCH:
 			if(!viewMode) {
@@ -454,15 +461,11 @@ bool ICGAppFrame::keyPressed( const OIS::KeyEvent &arg )
 				vLRRotate = 0.0f;
 				vLRMove = 0.0f;
 				vZRotate = 0.0f;
-				cPos = mCamera->getRealPosition();
-				cDir = mCamera->getRealDirection();
-				mCamera->setPosition(Ogre::Vector3(0,0,0));
-				mCamera->lookAt(Ogre::Vector3(0,0,500));
 			}
-			else {
-				mCamera->setPosition(cPos);
-				mCamera->setDirection(cDir);
-			}
+			mCamera->setPosition(cPos);
+			mCamera->setDirection(cDir);
+			cPos = nPos;
+			cDir = nDir;
 			break;
 		default:
 			break;
@@ -532,14 +535,6 @@ bool ICGAppFrame::mouseMoved( const OIS::MouseEvent &arg )
 		switch(phase) {
 		case BEFORE_LAUNCH:
 			if(viewMode) {
-				/*vFRMove = 0.0f;
-				vLRRotate = 0.0f;
-				vLRMove = 0.0f;
-				vZRotate = 0.0f;
-				cPos = mCamera->getRealPosition();
-				cDir = mCamera->getRealDirection();
-				mCamera->setPosition(Ogre::Vector3(0,0,0));
-				mCamera->lookAt(Ogre::Vector3(0,0,500));*/
 				Ogre::Vector3 cameraDirection = mCamera->getDirection();
 				cameraDirection /= cameraDirection.length();
 				Ogre::Quaternion q;
@@ -637,7 +632,7 @@ void ICGAppFrame::windowClosed(Ogre::RenderWindow* rw)
 
 void ICGAppFrame::processCamera()
 {
-	Ogre::Real m_accelFRMove = 0.001*accelFRMove;
+	Ogre::Real m_accelFRMove = 0.01*accelFRMove;
 	if (mKey_W && vFRMove < accelFRMove) vFRMove += 10*m_accelFRMove;
 	if (mKey_S && vFRMove > -accelFRMove) vFRMove -= 10*m_accelFRMove;
 	if (!(mKey_W ^ mKey_S)) {
@@ -650,9 +645,9 @@ void ICGAppFrame::processCamera()
 			else vFRMove += m_accelFRMove;
 		}
 	}
-	if(vFRMove) mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection()*0.2*vFRMove);
+	if(vFRMove) mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection()*2.0*vFRMove);
 
-	Ogre::Real m_accelLRRotate = 0.001*accelLRRotate;
+	Ogre::Real m_accelLRRotate = 0.01*accelLRRotate;
 	if (mKey_A && vLRRotate < accelLRRotate) vLRRotate += 10*m_accelLRRotate;
 	if (mKey_D && vLRRotate > -accelLRRotate) vLRRotate -= 10*m_accelLRRotate;
 	if (!(mKey_A ^ mKey_D)) {
@@ -665,9 +660,9 @@ void ICGAppFrame::processCamera()
 			else vLRRotate += m_accelLRRotate;
 		}
 	}
-	if(vLRRotate) mCamera->rotate(mCamera->getRealUp(), Ogre::Radian(Ogre::Degree(0.05*vLRRotate)));
+	if(vLRRotate) mCamera->rotate(mCamera->getRealUp(), Ogre::Radian(Ogre::Degree(0.5*vLRRotate)));
 
-	Ogre::Real m_accelLRMove = 0.001*accelLRMove;
+	Ogre::Real m_accelLRMove = 0.01*accelLRMove;
 	if (mKey_Q && vLRMove < accelLRMove) vLRMove += 10*m_accelLRMove;
 	if (mKey_E && vLRMove > -accelLRMove) vLRMove -= 10*m_accelLRMove;
 	if (!(mKey_Q ^ mKey_E)) {
@@ -680,9 +675,14 @@ void ICGAppFrame::processCamera()
 			else vLRMove += m_accelLRMove;
 		}
 	}
-	if(vLRMove) mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection().crossProduct(mCamera->getRealUp())*-0.2*vLRMove);
+	if(vLRMove) mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection().crossProduct(mCamera->getRealUp())*-2.0*vLRMove);
 
-	Ogre::Real m_accelZRotate = 0.001*accelZRotate;
+	processCameraZ();
+}
+
+void ICGAppFrame::processCameraZ()
+{
+	Ogre::Real m_accelZRotate = 0.01*accelZRotate;
 	if (mKey_Z && vZRotate < accelZRotate) vZRotate += 10*m_accelZRotate;
 	if (mKey_C && vZRotate > -accelZRotate) vZRotate -= 10*m_accelZRotate;
 	if (!(mKey_Z ^ mKey_C)) {
@@ -695,15 +695,17 @@ void ICGAppFrame::processCamera()
 			else vZRotate += m_accelZRotate;
 		}
 	}
-	if(vZRotate) mCamera->rotate(mCamera->getRealDirection(), Ogre::Radian(Ogre::Degree(0.1*vZRotate)));
+	if(vZRotate) mCamera->rotate(mCamera->getRealDirection(), Ogre::Radian(Ogre::Degree(1.0*vZRotate)));
 }
 
 void ICGAppFrame::trackCamera()
 {
-	Ogre::Vector3 offset = Ogre::Vector3(0.0f, 0.0f, -200.0f);
+	Ogre::Real offsetScale = -200.0f;
 	btVector3 rocketDir = World::getInstance()->getRocket()->getLinearVelocity();
-	mCamera->setPosition(World::getInstance()->getRocketPosition() + offset);
-	mCamera->setDirection(Ogre::Vector3(rocketDir.getX(), rocketDir.getY(), rocketDir.getZ()));
+	Ogre::Vector3 direction = Ogre::Vector3(rocketDir.getX(), rocketDir.getY(), rocketDir.getZ()).normalisedCopy()
+		+ mCamera->getRealUp()/-10.0;
+	mCamera->setPosition(World::getInstance()->getRocketPosition() + direction*offsetScale);
+	mCamera->setDirection(direction);
 }
 
 void ICGAppFrame::collisionCheck()
