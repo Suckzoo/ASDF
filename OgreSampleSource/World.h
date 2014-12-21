@@ -28,6 +28,7 @@ public:
 	void destroyRocket();
 	bool isRocketFired();
 	void reloadRocket();
+	Rocket* getRocket();
 	void contactedWithPlanet();
 	void contactedWithTarget();
 	Ogre::Vector3 getRocketPosition();
