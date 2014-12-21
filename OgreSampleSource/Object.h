@@ -86,6 +86,10 @@ public:
 	{
 		this->rigidBody->applyCentralForce(btVector3(x, y, z));
 	}
+	void setCastShadows(bool val)
+	{
+		this->entity->setCastShadows(val);
+	}
 	/*void setCallback(){ //TODO
 		
 	}*/

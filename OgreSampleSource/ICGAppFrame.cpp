@@ -253,6 +253,7 @@ bool ICGAppFrame::SetupScene()
 		// Create the scene
 		Sphere* sphere = new Sphere("SphereNode1",50,btVector3(0,0,500));
 		sphere->applyMaterial("Examples/BeachStones");
+		sphere->setCastShadows(true);
 		//sphere->setPosition(0,0,0);
 		World::getInstance()->addObject(sphere);
 		World::getInstance()->reloadRocket();
@@ -274,16 +275,28 @@ bool ICGAppFrame::SetupScene()
 		/*headNode->attachObject(sphere);
 		headNode->setPosition(0,0,0);
 		headNode->setScale(1,1,1);
-		*/// Set ambient light
-		mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
+		*/
+		// Set ambient light
+		mSceneMgr->setAmbientLight(Ogre::ColourValue(0.1, 0.1, 0.1));
 
 		Ogre::ParticleSystem* particleSystem = mSceneMgr->createParticleSystem("explosions", "Examples/Smoke");
 		particleSystem->fastForward(10.0);
 		sphere->getSceneNode()->attachObject(particleSystem);
 		// Create a light
-		Ogre::Light* MainLight = mSceneMgr->createLight("MainLight");
+		/*Ogre::Light* MainLight = mSceneMgr->createLight("MainLight");
 		MainLight->setPosition(20,80,50);
 		MainLight->setDiffuseColour(Ogre::ColourValue(1,1,1));
+		*/
+
+		//Set shadow type
+		mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
+
+		//Set directional light
+		Ogre::Light* directionalLight = mSceneMgr->createLight("directionalLight");
+		directionalLight->setType(Ogre::Light::LT_DIRECTIONAL);
+		directionalLight->setDiffuseColour(Ogre::ColourValue(.25, .25, .2));
+		directionalLight->setSpecularColour(Ogre::ColourValue(.9, .9, .1));
+		directionalLight->setDirection(Ogre::Vector3( 1, 0, 0 ));
 		//-------------------------------------------------------------------------------------
 	}
 
