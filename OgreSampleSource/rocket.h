@@ -38,7 +38,6 @@ public:
 		rocketTail = ICGAppFrame::getInstance()->getSceneMgr()->createParticleSystem("rocketTail", "Examples/PurpleFountain");
 		helperNode->attachObject(rocketTail);
 
-
 		scaleX = _scaleX;
 		scaleY = _scaleY;
 		scaleZ = _scaleZ;
@@ -63,7 +62,6 @@ public:
 	~Rocket()
 	{
 		ICGAppFrame::getInstance()->getSceneMgr()->destroySceneNode(helperNode);
-		
 		ICGAppFrame::getInstance()->getSceneMgr()->destroyParticleSystem(rocketTail);
 	}
 
