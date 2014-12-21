@@ -49,6 +49,8 @@ ICGAppFrame::ICGAppFrame(void)
 	, accelZRotate(1.0f)
 	, vZRotate(0.0f)
 	, mKey_Space(false)
+	, phase(BEFORE_LAUNCH)
+	, viewMode(false)
 	, mCameraNearClipDistance(1.0f)
 	, dynamicsWorld(nullptr)
 	, launchTrial(0)
@@ -312,7 +314,11 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 		return false;
 	}
 	if (mKey_Space) {
-		if(!World::getInstance()->isRocketFired()) World::getInstance()->launchRocket();
+		if(!World::getInstance()->isRocketFired() && viewMode) {
+			Ogre::Vector3 direction = mCamera->getDirection();
+			btVector3 btDirection(direction.x, direction.y, direction.z);
+			World::getInstance()->launchRocket(btDirection);
+		}
 	}
 
 	if(mShutDown)
@@ -332,70 +338,21 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	{
 
 	}
-	
-	Ogre::Real m_accelFRMove = 0.001*accelFRMove;
-	if (mKey_W && vFRMove < accelFRMove) vFRMove += 10*m_accelFRMove;
-	if (mKey_S && vFRMove > -accelFRMove) vFRMove -= 10*m_accelFRMove;
-	if (!(mKey_W ^ mKey_S)) {
-		if(vFRMove > 0) {
-			if(vFRMove < m_accelFRMove) vFRMove = 0.0f;
-			else vFRMove -= m_accelFRMove;
-		}
-		else if(vFRMove < 0) {
-			if(vFRMove > -m_accelFRMove) vFRMove = 0.0f;
-			else vFRMove += m_accelFRMove;
-		}
-	}
-	if(vFRMove) mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection()*0.2*vFRMove);
 
-	Ogre::Real m_accelLRRotate = 0.001*accelLRRotate;
-	if (mKey_A && vLRRotate < accelLRRotate) vLRRotate += 10*m_accelLRRotate;
-	if (mKey_D && vLRRotate > -accelLRRotate) vLRRotate -= 10*m_accelLRRotate;
-	if (!(mKey_A ^ mKey_D)) {
-		if(vLRRotate > 0) {
-			if(vLRRotate < m_accelLRRotate) vLRRotate = 0.0f;
-			else vLRRotate -= m_accelLRRotate;
+	switch(phase) {
+	case BEFORE_LAUNCH:
+		if(!viewMode) {
+			processCamera();
 		}
-		else if(vLRRotate < 0) {
-			if(vLRRotate > -m_accelLRRotate) vLRRotate = 0.0f;
-			else vLRRotate += m_accelLRRotate;
-		}
+		break;
+	default:
+		break;
 	}
-	if(vLRRotate) mCamera->rotate(mCamera->getRealUp(), Ogre::Radian(Ogre::Degree(0.05*vLRRotate)));
-
-	Ogre::Real m_accelLRMove = 0.001*accelLRMove;
-	if (mKey_Q && vLRMove < accelLRMove) vLRMove += 10*m_accelLRMove;
-	if (mKey_E && vLRMove > -accelLRMove) vLRMove -= 10*m_accelLRMove;
-	if (!(mKey_Q ^ mKey_E)) {
-		if(vLRMove > 0) {
-			if(vLRMove < m_accelLRMove) vLRMove = 0.0f;
-			else vLRMove -= m_accelLRMove;
-		}
-		else if(vLRMove < 0) {
-			if(vLRMove > -m_accelLRMove) vLRMove = 0.0f;
-			else vLRMove += m_accelLRMove;
-		}
-	}
-	if(vLRMove) mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection().crossProduct(mCamera->getRealUp())*-0.2*vLRMove);
-
-	Ogre::Real m_accelZRotate = 0.001*accelZRotate;
-	if (mKey_Z && vZRotate < accelZRotate) vZRotate += 10*m_accelZRotate;
-	if (mKey_C && vZRotate > -accelZRotate) vZRotate -= 10*m_accelZRotate;
-	if (!(mKey_Z ^ mKey_C)) {
-		if(vZRotate > 0) {
-			if(vZRotate < m_accelZRotate) vZRotate = 0.0f;
-			else vZRotate -= m_accelZRotate;
-		}
-		else if(vZRotate < 0) {
-			if(vZRotate > -m_accelZRotate) vZRotate = 0.0f;
-			else vZRotate += m_accelZRotate;
-		}
-	}
-	if(vZRotate) mCamera->rotate(mCamera->getRealDirection(), Ogre::Radian(Ogre::Degree(0.1*vZRotate)));
 
 	mTrayMgr->setXCamera(mCamera->getRealPosition().x);
 	mTrayMgr->setYCamera(mCamera->getRealPosition().y);
 	mTrayMgr->setZCamera(mCamera->getRealPosition().z);
+	
 	//Sleep(1000.0/60.0);
 	return true;
 }
@@ -471,6 +428,36 @@ bool ICGAppFrame::keyPressed( const OIS::KeyEvent &arg )
 	if(arg.key == OIS::KC_C) {
 		mKey_C = true;
 	}
+	if(arg.key == OIS::KC_TAB) {
+		switch(phase) {
+		case BEFORE_LAUNCH:
+			if(!viewMode) {
+				vFRMove = 0.0f;
+				vLRRotate = 0.0f;
+				vLRMove = 0.0f;
+				vZRotate = 0.0f;
+				cPos = mCamera->getRealPosition();
+				cDir = mCamera->getRealDirection();
+				mCamera->setPosition(Ogre::Vector3(0,0,0));
+				mCamera->lookAt(Ogre::Vector3(0,0,500));
+			}
+			else {
+				mCamera->setPosition(cPos);
+				mCamera->setDirection(cDir);
+			}
+			break;
+		default:
+			break;
+		}
+		viewMode = !viewMode;
+	}
+	if(arg.key == OIS::KC_I) {
+		vFRMove = 0.0f;
+		vLRRotate = 0.0f;
+		vLRMove = 0.0f;
+		vZRotate = 0.0f;
+		initCamera();
+	}
 	if(arg.key == OIS::KC_SPACE) {
 		mKey_Space = true;
 	}
@@ -520,6 +507,56 @@ bool ICGAppFrame::mouseMoved( const OIS::MouseEvent &arg )
 		mCamera->rotate(mCamera->getRealUp(), Ogre::Radian(Ogre::Degree(-0.1)*(newPos.x-pos.x)));
 		mCamera->rotate(mCamera->getRealDirection().crossProduct(mCamera->getRealUp()), Ogre::Radian(Ogre::Degree(-0.1)*(newPos.y-pos.y)));
 		pos = newPos;
+		switch(phase) {
+		case BEFORE_LAUNCH:
+			if(viewMode) {
+				/*vFRMove = 0.0f;
+				vLRRotate = 0.0f;
+				vLRMove = 0.0f;
+				vZRotate = 0.0f;
+				cPos = mCamera->getRealPosition();
+				cDir = mCamera->getRealDirection();
+				mCamera->setPosition(Ogre::Vector3(0,0,0));
+				mCamera->lookAt(Ogre::Vector3(0,0,500));*/
+				Ogre::Vector3 cameraDirection = mCamera->getDirection();
+				cameraDirection /= cameraDirection.length();
+				Ogre::Quaternion q;
+				Ogre::Vector3 refVector(0,1,0);
+				Ogre::Real d = refVector.dotProduct(cameraDirection);
+				if(d > 0.999999)
+				{
+					q.w = 1;
+					q.x = 0;
+					q.y = 0;
+					q.z = 0;
+				}
+				else if(d < -0.999999)
+				{
+					q.w = 0;
+					q.x = 1;
+					q.y = 0;
+					q.z = 0;
+				}
+				else
+				{
+					Ogre::Real s = sqrt( (1+d)*2 );
+					Ogre::Real invs = 1 / s;
+
+					Ogre::Vector3 c = refVector.crossProduct(cameraDirection);
+					q.x = c.x * invs;
+					q.y = c.y * invs;
+					q.z = c.z * invs;
+					q.w = s * 0.5f;
+					q.normalise();
+				}
+				World::getInstance()->setRocketOrientation(q.w, q.x, q.y, q.z);
+			}
+			else {
+			}
+			break;
+		default:
+			break;
+		}
 	}
 	return true;
 }
@@ -574,6 +611,69 @@ void ICGAppFrame::windowClosed(Ogre::RenderWindow* rw)
 			mInputManager = nullptr;
 		}
 	}	
+}
+
+void ICGAppFrame::processCamera()
+{
+	Ogre::Real m_accelFRMove = 0.001*accelFRMove;
+	if (mKey_W && vFRMove < accelFRMove) vFRMove += 10*m_accelFRMove;
+	if (mKey_S && vFRMove > -accelFRMove) vFRMove -= 10*m_accelFRMove;
+	if (!(mKey_W ^ mKey_S)) {
+		if(vFRMove > 0) {
+			if(vFRMove < m_accelFRMove) vFRMove = 0.0f;
+			else vFRMove -= m_accelFRMove;
+		}
+		else if(vFRMove < 0) {
+			if(vFRMove > -m_accelFRMove) vFRMove = 0.0f;
+			else vFRMove += m_accelFRMove;
+		}
+	}
+	if(vFRMove) mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection()*0.2*vFRMove);
+
+	Ogre::Real m_accelLRRotate = 0.001*accelLRRotate;
+	if (mKey_A && vLRRotate < accelLRRotate) vLRRotate += 10*m_accelLRRotate;
+	if (mKey_D && vLRRotate > -accelLRRotate) vLRRotate -= 10*m_accelLRRotate;
+	if (!(mKey_A ^ mKey_D)) {
+		if(vLRRotate > 0) {
+			if(vLRRotate < m_accelLRRotate) vLRRotate = 0.0f;
+			else vLRRotate -= m_accelLRRotate;
+		}
+		else if(vLRRotate < 0) {
+			if(vLRRotate > -m_accelLRRotate) vLRRotate = 0.0f;
+			else vLRRotate += m_accelLRRotate;
+		}
+	}
+	if(vLRRotate) mCamera->rotate(mCamera->getRealUp(), Ogre::Radian(Ogre::Degree(0.05*vLRRotate)));
+
+	Ogre::Real m_accelLRMove = 0.001*accelLRMove;
+	if (mKey_Q && vLRMove < accelLRMove) vLRMove += 10*m_accelLRMove;
+	if (mKey_E && vLRMove > -accelLRMove) vLRMove -= 10*m_accelLRMove;
+	if (!(mKey_Q ^ mKey_E)) {
+		if(vLRMove > 0) {
+			if(vLRMove < m_accelLRMove) vLRMove = 0.0f;
+			else vLRMove -= m_accelLRMove;
+		}
+		else if(vLRMove < 0) {
+			if(vLRMove > -m_accelLRMove) vLRMove = 0.0f;
+			else vLRMove += m_accelLRMove;
+		}
+	}
+	if(vLRMove) mCamera->setPosition(mCamera->getPosition() + mCamera->getRealDirection().crossProduct(mCamera->getRealUp())*-0.2*vLRMove);
+
+	Ogre::Real m_accelZRotate = 0.001*accelZRotate;
+	if (mKey_Z && vZRotate < accelZRotate) vZRotate += 10*m_accelZRotate;
+	if (mKey_C && vZRotate > -accelZRotate) vZRotate -= 10*m_accelZRotate;
+	if (!(mKey_Z ^ mKey_C)) {
+		if(vZRotate > 0) {
+			if(vZRotate < m_accelZRotate) vZRotate = 0.0f;
+			else vZRotate -= m_accelZRotate;
+		}
+		else if(vZRotate < 0) {
+			if(vZRotate > -m_accelZRotate) vZRotate = 0.0f;
+			else vZRotate += m_accelZRotate;
+		}
+	}
+	if(vZRotate) mCamera->rotate(mCamera->getRealDirection(), Ogre::Radian(Ogre::Degree(0.1*vZRotate)));
 }
 
 void ICGAppFrame::collisionCheck()

@@ -26,7 +26,7 @@ public:
 	void addObject(Object* object);
 	void stepSimulation();
 	void registerRocket(Rocket* rocket);
-	void launchRocket();
+	void launchRocket(btVector3 direction);
 	void destroyRocket();
 	bool isRocketFired();
 	void reloadRocket();
@@ -34,5 +34,7 @@ public:
 	void contactedWithTarget();
 	Ogre::Vector3 getRocketPosition();
 	Ogre::Quaternion getRocketOrientation();
+	void setRocketPosition(Ogre::Real x, Ogre::Real y, Ogre::Real z);
+	void setRocketOrientation(Ogre::Real w, Ogre::Real x, Ogre::Real y, Ogre::Real z);
 };
 #endif
