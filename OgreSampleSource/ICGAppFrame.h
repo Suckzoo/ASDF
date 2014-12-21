@@ -88,6 +88,7 @@ public:
 	Ogre::SceneManager* getSceneMgr() {return mSceneMgr;}
 	void removeObjectFromDynamicsWorld(btRigidBody* _obj) {dynamicsWorld->removeRigidBody(_obj);}
 	void addToDynamicsWorld(btRigidBody* _obj) {dynamicsWorld->addRigidBody(_obj);}
+	void initCamera();
 	void deleteFromDynamicsWorld(btRigidBody* _obj)
 	{
 		dynamicsWorld->removeRigidBody(_obj);
@@ -100,6 +101,7 @@ public:
 	{
 		launchTrial++;
 	}
+	void collisionCheck();
 	/** Upper-most method directly called from WinMain */
 	bool go(void);
 
@@ -135,5 +137,16 @@ protected:
 
 	//---------------------------------------- 
 };
+
+//struct MyContactResultCallback : public btCollisionWorld::ContactResultCallback
+//{
+//	btScalar addSingleResult(btManifoldPoint& cp,
+//		const btCollisionObjectWrapper* colObj0Wrap,
+//		int partId0,
+//		int index0,
+//		const btCollisionObjectWrapper* colObj1Wrap,
+//		int partId1,
+//		int index1);
+//};
 
 #endif // #ifndef __ICGAppFrame_h_

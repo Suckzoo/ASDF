@@ -3,11 +3,14 @@
 #include <typeinfo>
 using std::shared_ptr;
 
-//FILE *simulLog = fopen("output.log","wt");
+FILE *simulLog = fopen("output.log","wt");
+
 
 World::World()
 	: m_pWorld(list<shared_ptr<Object> >())
 	, isRocketLaunched(false)
+	, isContactedWithPlanet(false)
+	, isContactedWithTarget(false)
 {
 
 }
@@ -30,20 +33,25 @@ void World::addObject(Object* obj)
 
 void World::stepSimulation()
 {
-	//m_pLaunchedRocket.get()->stepSimulation();
+	m_pLaunchedRocket->get()->stepSimulation();
 	for(auto it = m_pWorld.begin(); it != m_pWorld.end(); it++)
 	{		
 		if(!(*it)) {
 			m_pWorld.erase(it);
 			continue;
 		}
-		(*it)->stepSimulation();
+		//if(it==m_pLaunchedRocket) continue;
+		//ICGAppFrame::getInstance()->collisionCheck(m_pLaunchedRocket->get()->getRigidBody(), it->get()->getRigidBody());
 	}
+	ICGAppFrame::getInstance()->collisionCheck();
 	//TODO : Collision detection for m_pLaunchedRocket and m_pWorld[i].
 	if(isRocketLaunched) {
-		//fprintf(simulLog, "Rocket launched.\n");
+		if(isContactedWithTarget || isContactedWithPlanet)
+		{
+			destroyRocket();
+			return;
+		}
 		Ogre::Vector3 l = (*m_pLaunchedRocket).get()->getPosition();
-		//fprintf(simulLog, "Current rocket position : (%lf, %lf, %lf)\n", l.x, l.y, l.z);
 		btVector3 netForce(0,0,0);
 		for(auto it = m_pWorld.begin(); it != m_pWorld.end(); it++)
 		{
@@ -56,25 +64,15 @@ void World::stepSimulation()
 				Ogre::Vector3 locPlanet = (*it).get()->getPosition();
 				Ogre::Vector3 locRocket = (*m_pLaunchedRocket).get()->getPosition();
 				Ogre::Vector3 dist = locPlanet - locRocket;
-				if(dist.length()<=1000.0f) { //force area. can be fixed. (minor priority)
-					//Pseudocode section!
-					//Collision detection -> Chih-yu, could you implement the method of it?
-					//if(isCollided) {  -> you have to implement "isCollided" method.
-					//	destroyRocket();
-					//}
-					//else {
-						double r = dist.length();
-						dist = dist / dist.length();
-						btVector3 forceApplied = (1000000.0/(r*r)) * btVector3(dist.x, dist.y, dist.z);
-						netForce += forceApplied;
-						//fprintf(simulLog, "Force applied by planet : (%lf, %lf, %lf)\n", forceApplied.x(), forceApplied.x(), forceApplied.x());
-					//}
+				if(dist.length()<=1000.0f) {
+					double r = dist.length();
+					dist = dist / dist.length();
+					btVector3 forceApplied = (1000000.0/(r*r)) * btVector3(dist.x, dist.y, dist.z);
+					netForce += forceApplied;
 				}
 			}
 		}
-		//fprintf(simulLog, "Total force applied is : (%lf, %lf, %lf)\n", netForce.x(), netForce.y(), netForce.z());
 		btVector3 v = ((Rocket*)((*m_pLaunchedRocket).get()))->getLinearVelocity();
-		//fprintf(simulLog, "Current velocity of rocket is : (%lf, %lf, %lf)\n", v.x(), v.y(), v.z());
 		((Rocket*)(*m_pLaunchedRocket).get())
 			->applyCentralForce(netForce.x(), netForce.y(), netForce.z());
 		Ogre::Quaternion q;
@@ -102,8 +100,6 @@ void World::stepSimulation()
 			(*m_pLaunchedRocket).get()->setOrientation(q.w, q.x, q.y, q.z);
 		}
 	}
-	
-	//TODO end
 }
 
 void World::registerRocket(Rocket* rocket)
@@ -123,25 +119,29 @@ void World::launchRocket()
 
 void World::reloadRocket()
 {
-	Rocket* rocket = new Rocket("RocketNode", 11, 60, 11, 10, btVector3(0,150,0), btQuaternion((double)sqrt(2.0), 0, 0, (double)sqrt(2.0)));
+	Rocket* rocket = new Rocket("RocketNode", 11, 60, 11, 10, btVector3(0,0,0), btQuaternion((double)sqrt(2.0), 0, 0, (double)sqrt(2.0)));
 	registerRocket(rocket);
 }
 void World::destroyRocket()
 {
-	//Pseudocode section!
-	//globalKaboom!(); -> to be implemented soon!
-	//
-	//Pseudocode section ends.
-	//	if(isCollidedWithTarget?) {
-	//		gameClear();
-	//	}
-	//	else {
-	//		trialFailed();
-	//	}
-	//the following code is failed case : generate new rocket, and try again!
-	isRocketLaunched = false;
-	m_pWorld.erase(m_pLaunchedRocket);
-	reloadRocket();
+	Ogre::Vector3 p = m_pLaunchedRocket->get()->getPosition();
+	fprintf(simulLog, "Rocket destroyed : (%lf, %lf, %lf)\n", p.x, p.y, p.z);
+	//Kaboom()
+	if(isContactedWithTarget)
+	{
+		isContactedWithTarget = false;
+		isContactedWithPlanet = false;
+		//gameClear()
+	}
+	else if(isContactedWithPlanet)
+	{
+		isContactedWithPlanet = false;
+		isRocketLaunched = false;
+		Sleep(500);
+		ICGAppFrame::getInstance()->initCamera();
+		m_pWorld.erase(m_pLaunchedRocket);
+		reloadRocket();
+	}
 	//ICGAppFrame::getInstance()->deleteFromDynamicsWorld(m_pLaunchedRocket.get()->getRigidBody());
 	//m_pLaunchedRocket.reset();
 }
@@ -167,4 +167,14 @@ Ogre::Quaternion World::getRocketOrientation()
 		return ((*m_pLaunchedRocket).get())->getOrientation();
 	}
 	return Ogre::Quaternion(0, 0, 0, 1);
+}
+
+void World::contactedWithPlanet()
+{
+	isContactedWithPlanet = true;
+}
+
+void World::contactedWithTarget()
+{
+	isContactedWithTarget = true;
 }
