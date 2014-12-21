@@ -309,7 +309,7 @@ bool ICGAppFrame::SetupScene()
 		directionalLight->setType(Ogre::Light::LT_DIRECTIONAL);
 		directionalLight->setDiffuseColour(Ogre::ColourValue(.25, .25, .2));
 		directionalLight->setSpecularColour(Ogre::ColourValue(.9, .9, .1));
-		directionalLight->setDirection(Ogre::Vector3( 1, 0, 0 ));
+		directionalLight->setDirection(Ogre::Vector3( 0, 0, -1 ));
 		//-------------------------------------------------------------------------------------
 	}
 
@@ -326,6 +326,7 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	}
 	if (mKey_Space) {
 		if(!World::getInstance()->isRocketFired() && viewMode) {
+			phase = FLYING;
 			Ogre::Vector3 direction = mCamera->getDirection();
 			btVector3 btDirection(direction.x, direction.y, direction.z);
 			World::getInstance()->launchRocket(btDirection);
@@ -442,6 +443,9 @@ bool ICGAppFrame::keyPressed( const OIS::KeyEvent &arg )
 	if(arg.key == OIS::KC_C) {
 		mKey_C = true;
 	}
+	if(arg.key == OIS::KC_T) {
+		World::getInstance()->contactedWithPlanet();
+	}
 	if(arg.key == OIS::KC_TAB) {
 		switch(phase) {
 		case BEFORE_LAUNCH:
@@ -510,7 +514,6 @@ bool ICGAppFrame::keyReleased( const OIS::KeyEvent &arg )
 	}
 	if(arg.key == OIS::KC_SPACE) {
 		mKey_Space = false;
-		phase = FLYING;
 	}
 	return true;
 }

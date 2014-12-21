@@ -126,6 +126,16 @@ public:
 	void Shutdown();
 	/** Upper-most method directly called from WinMain */
 	bool go(void);
+	void setPhase(int _phase)
+	{
+		phase = _phase;
+		switch(phase)
+		{
+		case 1:
+			viewMode = false;
+			break;
+		};
+	}
 
 protected:
 

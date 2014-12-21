@@ -167,6 +167,7 @@ void World::destroyRocket()
 	{
 		isContactedWithPlanet = false;
 		isRocketLaunched = false;
+		ICGAppFrame::getInstance()->setPhase(1);
 		Sleep(500);
 		ICGAppFrame::getInstance()->initCamera();
 		m_pWorld.erase(m_pLaunchedRocket);
