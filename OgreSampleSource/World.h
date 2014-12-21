@@ -24,7 +24,7 @@ public:
 	void addObject(Object* object);
 	void stepSimulation();
 	void registerRocket(Rocket* rocket);
-	void launchRocket();
+	void launchRocket(btVector3 direction);
 	void destroyRocket();
 	bool isRocketFired();
 	void reloadRocket();

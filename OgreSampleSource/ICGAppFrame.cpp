@@ -314,7 +314,11 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 		return false;
 	}
 	if (mKey_Space) {
-		if(!World::getInstance()->isRocketFired()) World::getInstance()->launchRocket();
+		if(!World::getInstance()->isRocketFired()) {
+			Ogre::Vector3 direction = mCamera->getDirection();
+			btVector3 btDirection(direction.x, direction.y, direction.z);
+			World::getInstance()->launchRocket(btDirection);
+		}
 	}
 
 	if(mShutDown)
@@ -503,6 +507,56 @@ bool ICGAppFrame::mouseMoved( const OIS::MouseEvent &arg )
 		mCamera->rotate(mCamera->getRealUp(), Ogre::Radian(Ogre::Degree(-0.1)*(newPos.x-pos.x)));
 		mCamera->rotate(mCamera->getRealDirection().crossProduct(mCamera->getRealUp()), Ogre::Radian(Ogre::Degree(-0.1)*(newPos.y-pos.y)));
 		pos = newPos;
+		switch(phase) {
+		case BEFORE_LAUNCH:
+			if(viewMode) {
+				/*vFRMove = 0.0f;
+				vLRRotate = 0.0f;
+				vLRMove = 0.0f;
+				vZRotate = 0.0f;
+				cPos = mCamera->getRealPosition();
+				cDir = mCamera->getRealDirection();
+				mCamera->setPosition(Ogre::Vector3(0,0,0));
+				mCamera->lookAt(Ogre::Vector3(0,0,500));*/
+				Ogre::Vector3 cameraDirection = mCamera->getDirection();
+				cameraDirection /= cameraDirection.length();
+				Ogre::Quaternion q;
+				Ogre::Vector3 refVector(0,1,0);
+				Ogre::Real d = refVector.dotProduct(cameraDirection);
+				if(d > 0.999999)
+				{
+					q.w = 1;
+					q.x = 0;
+					q.y = 0;
+					q.z = 0;
+				}
+				else if(d < -0.999999)
+				{
+					q.w = 0;
+					q.x = 1;
+					q.y = 0;
+					q.z = 0;
+				}
+				else
+				{
+					Ogre::Real s = sqrt( (1+d)*2 );
+					Ogre::Real invs = 1 / s;
+
+					Ogre::Vector3 c = refVector.crossProduct(cameraDirection);
+					q.x = c.x * invs;
+					q.y = c.y * invs;
+					q.z = c.z * invs;
+					q.w = s * 0.5f;
+					q.normalise();
+				}
+				World::getInstance()->setRocketOrientation(q.w, q.x, q.y, q.z);
+			}
+			else {
+			}
+			break;
+		default:
+			break;
+		}
 	}
 	return true;
 }

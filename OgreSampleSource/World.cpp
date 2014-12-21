@@ -78,23 +78,28 @@ void World::stepSimulation()
 		Ogre::Quaternion q;
 		Ogre::Vector3 refVector(0,1,0);
 		Ogre::Vector3 velocity(v.x(), v.y(), v.z());
+		Ogre::Real d = refVector.dotProduct(velocity);
 		if(velocity.length()>0.0001) {
-			if(refVector.dotProduct(velocity)/velocity.length()>0.999999) {
+			velocity /= velocity.length();
+			if(d>0.999999) {
 				q.w = 1;
 				q.x = 0;
 				q.y = 0;
 				q.z = 0;
-			} else if(refVector.dotProduct(velocity)/velocity.length()<-0.999999) {
+			} else if(d<-0.999999) {
 				q.w = 0;
 				q.x = 1;
 				q.y = 0;
 				q.z = 0;
 			} else {
-				Ogre::Vector3 cross_value = refVector.crossProduct(velocity);
-				q.w = sqrt((refVector.length()*refVector.length()) + (velocity.length()*velocity.length())) + refVector.dotProduct(velocity);
-				q.x = cross_value.x;
-				q.y = cross_value.y;
-				q.z = cross_value.z;
+				Ogre::Real s = sqrt( (1+d)*2 );
+				Ogre::Real invs = 1 / s;
+
+				Ogre::Vector3 c = refVector.crossProduct(velocity);
+				q.x = c.x * invs;
+				q.y = c.y * invs;
+				q.z = c.z * invs;
+				q.w = s * 0.5f;
 				q.normalise();
 			}
 			(*m_pLaunchedRocket).get()->setOrientation(q.w, q.x, q.y, q.z);
@@ -110,10 +115,10 @@ void World::registerRocket(Rocket* rocket)
 	m_pLaunchedRocket = m_pWorld.end();
 	m_pLaunchedRocket--;
 }
-void World::launchRocket()
+void World::launchRocket(btVector3 direction)
 {
 	(*m_pLaunchedRocket).get()->getRigidBody()->activate();
-	(*m_pLaunchedRocket).get()->getRigidBody()->setLinearVelocity(btVector3(0,0,50));
+	(*m_pLaunchedRocket).get()->getRigidBody()->setLinearVelocity(50*direction);
 	isRocketLaunched = true;	
 }
 
