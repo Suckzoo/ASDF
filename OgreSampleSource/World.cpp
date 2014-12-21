@@ -134,6 +134,7 @@ void World::destroyRocket()
 	fprintf(simulLog, "Rocket destroyed : (%lf, %lf, %lf)\n", p.x, p.y, p.z);
 	//Kaboom()
 	if(!isExploding){
+		((Rocket*)((*m_pLaunchedRocket).get()))->deleteTailEffect();
 		Ogre::SceneManager* sceneMgr = ICGAppFrame::getInstance()->getSceneMgr();
 		Ogre::ParticleSystem* particleSystem1 = sceneMgr->createParticleSystem("ExplosionEffect1", "Examples/ModifiedFountain");
 		particleSystem1->fastForward(10.0);
@@ -159,6 +160,7 @@ void World::destroyRocket()
 	{
 		isContactedWithTarget = false;
 		isContactedWithPlanet = false;
+		ICGAppFrame::getInstance()->Shutdown();
 		//gameClear()
 	}
 	else if(isContactedWithPlanet)

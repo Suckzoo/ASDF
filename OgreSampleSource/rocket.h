@@ -37,7 +37,7 @@ public:
 		helperNode->setOrientation(0,0,0,1);
 		helperNode->setPosition(0,0,0);
 		
-		rocketTail = ICGAppFrame::getInstance()->getSceneMgr()->createParticleSystem("rocketTail", "Examples/Smoke");
+		rocketTail = ICGAppFrame::getInstance()->getSceneMgr()->createParticleSystem("rocketTail", "Examples/JetEngine2");
 		helperNode->attachObject(rocketTail);
 		scaleX = _scaleX;
 		scaleY = _scaleY;
@@ -60,6 +60,11 @@ public:
 	{
 		ICGAppFrame::getInstance()->getSceneMgr()->destroySceneNode(helperNode);
 		
+		//ICGAppFrame::getInstance()->getSceneMgr()->destroyParticleSystem(rocketTail);
+	}
+	
+	void deleteTailEffect()
+	{
 		ICGAppFrame::getInstance()->getSceneMgr()->destroyParticleSystem(rocketTail);
 	}
 
