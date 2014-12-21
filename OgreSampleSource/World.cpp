@@ -169,6 +169,11 @@ Ogre::Quaternion World::getRocketOrientation()
 	return Ogre::Quaternion(0, 0, 0, 1);
 }
 
+Rocket* World::getRocket()
+{
+	return (Rocket*)(*m_pLaunchedRocket).get();
+}
+
 void World::contactedWithPlanet()
 {
 	isContactedWithPlanet = true;
