@@ -119,7 +119,7 @@ void World::launchRocket()
 
 void World::reloadRocket()
 {
-	Rocket* rocket = new Rocket("RocketNode", 11, 60, 11, 10, btVector3(0,0,0), btQuaternion((double)sqrt(2.0), 0, 0, (double)sqrt(2.0)));
+	Rocket* rocket = new Rocket("RocketNode", 100, 100, 100, 10, btVector3(0,0,0), btQuaternion((double)sqrt(2.0), 0, 0, (double)sqrt(2.0)));
 	registerRocket(rocket);
 }
 void World::destroyRocket()
