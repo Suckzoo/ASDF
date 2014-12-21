@@ -169,6 +169,16 @@ Ogre::Quaternion World::getRocketOrientation()
 	return Ogre::Quaternion(0, 0, 0, 1);
 }
 
+void World::setRocketPosition(Ogre::Real x, Ogre::Real y, Ogre::Real z)
+{
+	m_pLaunchedRocket->get()->setPosition(x, y, z);
+}
+
+void World::setRocketOrientation(Ogre::Real w, Ogre::Real x, Ogre::Real y, Ogre::Real z)
+{
+	m_pLaunchedRocket->get()->setOrientation(w, x, y, z);
+}
+
 void World::contactedWithPlanet()
 {
 	isContactedWithPlanet = true;
