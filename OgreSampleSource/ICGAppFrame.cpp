@@ -368,7 +368,7 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	mTrayMgr->setYCamera(mCamera->getRealPosition().y);
 	mTrayMgr->setZCamera(mCamera->getRealPosition().z);
 	
-	//Sleep(1000.0/60.0);
+	Sleep(1000.0/120.0);
 	return true;
 }
 
