@@ -22,31 +22,28 @@ public:
 	{
     	//set a scene node
 		sceneNode = ICGAppFrame::getInstance()->getSceneMgr()->getRootSceneNode()->createChildSceneNode(nodeName+"Node");
-		
 		entity = ICGAppFrame::getInstance()->getSceneMgr()->createEntity(nodeName+"Entity",gRocketMeshName);
-		
 		sceneNode->attachObject(entity);
-		
 		helperNode = sceneNode->createChildSceneNode(nodeName+"HelperNode");
 		//set a entity: the visual shape
 		//entity = ICGAppFrame::getInstance()->getSceneMgr()->createEntity(nodeName+"Entity",Ogre::SceneManager::PT_CUBE);
-		//set scale
-		helperNode->setScale(0.001,0.001,0.001);
-		helperNode->setOrientation(0,0,0,-1);
-		helperNode->setPosition(0,-5,0);
-		
-		rocketTail = ICGAppFrame::getInstance()->getSceneMgr()->createParticleSystem("rocketTail", "Examples/MyJetEngine");
-//		rocketTail->setSpeedFactor(0.1); 
-		helperNode->attachObject(rocketTail);
-
+		Ogre::AxisAlignedBox refbox = entity->getBoundingBox();
+		Ogre::Vector3 aabbsize = refbox.getMaximum() - refbox.getMinimum();
+		Ogre::Real xx = aabbsize.x;
+		Ogre::Real yy = aabbsize.y;
+		Ogre::Real zz = aabbsize.z;
 		scaleX = _scaleX;
 		scaleY = _scaleY;
 		scaleZ = _scaleZ;
-		
-		sceneNode->setPosition(position.x(), position.y(), position.z());
-		sceneNode->setOrientation(rotation.w(), rotation.x(), rotation.y(), rotation.z());
-		sceneNode->setScale(scaleX/100,scaleY/100,scaleZ/100);
 		rocketMass = _rocketMass;
+		sceneNode->setScale(scaleX/xx, scaleY/yy, scaleZ/zz);
+		//set scale
+		helperNode->setScale(0.01,0.0001,0.0001); //scale : Full extent of box!
+		helperNode->setOrientation(0,0,0,1);
+		helperNode->setPosition(0,0,0);
+		
+		rocketTail = ICGAppFrame::getInstance()->getSceneMgr()->createParticleSystem("rocketTail", "Examples/MyJetEngine");
+		helperNode->attachObject(rocketTail);
 		//set a rigidbody which is used for collision detection. 
 		shape = new btBoxShape(btVector3(scaleX/2, scaleY/2, scaleZ/2));//box collision shape
 		motionstate = new btDefaultMotionState(btTransform(rotation, position));//set motion
@@ -63,6 +60,12 @@ public:
 	~Rocket()
 	{
 		ICGAppFrame::getInstance()->getSceneMgr()->destroySceneNode(helperNode);
+		
+		//ICGAppFrame::getInstance()->getSceneMgr()->destroyParticleSystem(rocketTail);
+	}
+	
+	void deleteTailEffect()
+	{
 		ICGAppFrame::getInstance()->getSceneMgr()->destroyParticleSystem(rocketTail);
 	}
 

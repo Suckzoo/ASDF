@@ -18,19 +18,24 @@ private:
 	bool isRocketLaunched;
 	bool isContactedWithPlanet;
 	bool isContactedWithTarget;
+	bool isExploding;
+	clock_t explosion_begin, explosion_end;
 
 public:
 	static World* getInstance();
 	void addObject(Object* object);
 	void stepSimulation();
 	void registerRocket(Rocket* rocket);
-	void launchRocket();
+	void launchRocket(btVector3 direction);
 	void destroyRocket();
 	bool isRocketFired();
 	void reloadRocket();
+	Rocket* getRocket();
 	void contactedWithPlanet();
 	void contactedWithTarget();
 	Ogre::Vector3 getRocketPosition();
 	Ogre::Quaternion getRocketOrientation();
+	void setRocketPosition(Ogre::Real x, Ogre::Real y, Ogre::Real z);
+	void setRocketOrientation(Ogre::Real w, Ogre::Real x, Ogre::Real y, Ogre::Real z);
 };
 #endif
