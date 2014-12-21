@@ -36,11 +36,6 @@ public:
 		
 		ICGAppFrame::getInstance()->getSceneMgr()->destroySceneNode(sceneNode);
 		ICGAppFrame::getInstance()->getSceneMgr()->destroyEntity(entity);
-		
-		delete sceneNode;
-		delete entity;
-		
-		
 	}
 	Ogre::SceneNode* getSceneNode() {return this->sceneNode;}
 	btRigidBody* getRigidBody() {return this->rigidBody;}
@@ -79,12 +74,13 @@ public:
 	}
 	void stepSimulation()
 	{
+		//rigidBody->activate(true);
 		btTransform trans;
 		rigidBody->getMotionState()->getWorldTransform(trans);
 		btVector3 pos = trans.getOrigin();
 		btQuaternion rot = trans.getRotation();
-		this->setPosition(pos.x(), pos.y(), pos.z());
-		this->setOrientation(rot.w(), rot.x(), rot.y(), rot.z());
+		sceneNode->setPosition(pos.x(), pos.y(), pos.z());
+		sceneNode->setOrientation(rot.w(), rot.x(), rot.y(), rot.z());
 	}
 	void applyCentralForce(double x, double y, double z)
 	{

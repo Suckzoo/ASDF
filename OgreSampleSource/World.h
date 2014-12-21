@@ -14,12 +14,23 @@ private:
 	static World* instance;
 	World();
 	list <shared_ptr<Object> > m_pWorld;
-	shared_ptr<Rocket> m_pLaunchedRocket;
+	list<shared_ptr<Object>>::iterator m_pLaunchedRocket;
+	bool isRocketLaunched;
+	bool isContactedWithPlanet;
+	bool isContactedWithTarget;
+
 public:
 	static World* getInstance();
 	void addObject(Object* object);
 	void stepSimulation();
-	void launchRocket(Rocket* rocket);
+	void registerRocket(Rocket* rocket);
+	void launchRocket();
 	void destroyRocket();
+	bool isRocketFired();
+	void reloadRocket();
+	void contactedWithPlanet();
+	void contactedWithTarget();
+	Ogre::Vector3 getRocketPosition();
+	Ogre::Quaternion getRocketOrientation();
 };
 #endif

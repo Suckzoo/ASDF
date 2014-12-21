@@ -14,24 +14,37 @@ class Rocket : public Object
 {
 protected:
 	Ogre::Real scaleX, scaleY, scaleZ, rocketMass;
+	Ogre::SceneNode* helperNode;
+	Ogre::ParticleSystem* rocketTail;
 public:
 	Rocket(Ogre::String nodeName, double _scaleX = 100, double _scaleY = 100, double _scaleZ = 100, double _rocketMass = 10,
 		btVector3 position = btVector3(0,0,0), btQuaternion rotation = btQuaternion(0,0,0,1))
 	{
     	//set a scene node
 		sceneNode = ICGAppFrame::getInstance()->getSceneMgr()->getRootSceneNode()->createChildSceneNode(nodeName+"Node");
-		//set a entity: the visual shape
 		entity = ICGAppFrame::getInstance()->getSceneMgr()->createEntity(nodeName+"Entity",gRocketMeshName);
 		sceneNode->attachObject(entity);
-		
+		helperNode = sceneNode->createChildSceneNode(nodeName+"HelperNode");
+		//set a entity: the visual shape
+		//entity = ICGAppFrame::getInstance()->getSceneMgr()->createEntity(nodeName+"Entity",Ogre::SceneManager::PT_CUBE);
+		Ogre::AxisAlignedBox refbox = entity->getBoundingBox();
+		Ogre::Vector3 aabbsize = refbox.getMaximum() - refbox.getMinimum();
+		Ogre::Real xx = aabbsize.x;
+		Ogre::Real yy = aabbsize.y;
+		Ogre::Real zz = aabbsize.z;
 		//set scale
-		sceneNode->setScale(_scaleX/100.0, _scaleY/100.0, _scaleZ/100.0);
+		helperNode->setScale(0.01,0.0001,0.0001); //scale : Full extent of box!
+		helperNode->setOrientation(0,0,0,1);
+		helperNode->setPosition(0,0,0);
+		
+		rocketTail = ICGAppFrame::getInstance()->getSceneMgr()->createParticleSystem("rocketTail", "Examples/Smoke");
+		helperNode->attachObject(rocketTail);
 		scaleX = _scaleX;
 		scaleY = _scaleY;
 		scaleZ = _scaleZ;
 		rocketMass = _rocketMass;
 		//set a rigidbody which is used for collision detection. 
-		shape = new btBoxShape(btVector3(1.1*scaleX/100.0,1.05*scaleY/100.0,6.0*scaleZ/100.0));//box collision shape
+		shape = new btBoxShape(btVector3(scaleX/2, scaleY/2, scaleZ/2));//box collision shape
 		motionstate = new btDefaultMotionState(btTransform(rotation, position));//set motion
 
 		btVector3 localInertia;
@@ -39,7 +52,20 @@ public:
 
 		btRigidBody::btRigidBodyConstructionInfo rigidCI(rocketMass, motionstate, shape, localInertia);
 		rigidBody = new btRigidBody(rigidCI);
+		rigidBody->setUserIndex(2);
 		ICGAppFrame::getInstance()->addToDynamicsWorld(rigidBody);//register the rigidbody
+	}
+		
+	~Rocket()
+	{
+		ICGAppFrame::getInstance()->getSceneMgr()->destroySceneNode(helperNode);
+		
+		ICGAppFrame::getInstance()->getSceneMgr()->destroyParticleSystem(rocketTail);
+	}
+
+	btVector3 getLinearVelocity()
+	{
+		return rigidBody->getLinearVelocity();
 	}
 };
 #endif
