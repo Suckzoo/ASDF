@@ -17,6 +17,10 @@ public:
 		entity = ICGAppFrame::getInstance()->getSceneMgr()->createEntity(nodeName+"BoxEntity", Ogre::SceneManager::PT_CUBE);
 		sceneNode->attachObject(entity);
 		sceneNode->setPosition(position.x(), position.y(), position.z());
+		Ogre::AxisAlignedBox refbox = entity->getBoundingBox();
+		Ogre::Vector3 aabb = refbox.getMaximum() - refbox.getMinimum();
+		aabb /= 2;
+		sceneNode->setScale(halfExtentX/aabb.x, halfExtentY/aabb.y, halfExtentZ/aabb.z);
 		btVector3 halfExtents = btVector3(halfExtentX, halfExtentY, halfExtentZ);
 		btBoxShape* shape = new btBoxShape(halfExtents);
 		btDefaultMotionState *motionstate = new btDefaultMotionState(btTransform(rotation, position));
