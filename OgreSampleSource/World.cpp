@@ -68,7 +68,7 @@ void World::stepSimulation()
 				if(dist.length()<=1000.0f) {
 					double r = dist.length();
 					dist = dist / dist.length();
-					btVector3 forceApplied = (1000000.0/(r*r)) * btVector3(dist.x, dist.y, dist.z);
+					btVector3 forceApplied = (5000000.0/(r*r)) * btVector3(dist.x, dist.y, dist.z);
 					netForce += forceApplied;
 				}
 			}
@@ -172,6 +172,7 @@ void World::destroyRocket()
 		ICGAppFrame::getInstance()->initCamera();
 		m_pWorld.erase(m_pLaunchedRocket);
 		reloadRocket();
+		ICGAppFrame::getInstance()->trialFailed();
 	}
 	//ICGAppFrame::getInstance()->deleteFromDynamicsWorld(m_pLaunchedRocket.get()->getRigidBody());
 	//m_pLaunchedRocket.reset();
