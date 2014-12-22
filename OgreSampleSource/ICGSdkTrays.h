@@ -1713,10 +1713,12 @@ namespace ICGOgreBites
 		Ogre::Real xCamera;
 		Ogre::Real yCamera;
 		Ogre::Real zCamera;
+		Ogre::int32 numTrial;
     public:
 		void setXCamera(Ogre::Real l) {xCamera = l;}
 		void setYCamera(Ogre::Real l) {yCamera = l;}
 		void setZCamera(Ogre::Real l) {zCamera = l;}
+		void setShot(Ogre::int32 l) {numTrial = l;}
 		/*-----------------------------------------------------------------------------
 		| Creates backdrop, cursor, and trays.
 		-----------------------------------------------------------------------------*/
@@ -2244,6 +2246,7 @@ namespace ICGOgreBites
 				stats.push_back("xCamera");
 				stats.push_back("yCamera");
 				stats.push_back("zCamera");
+				stats.push_back("Shots");
 
 				mFpsLabel = createLabel(TL_NONE, mName + "/FpsLabel", "FPS:", 180);
 				mFpsLabel->_assignListener(this);
@@ -2825,6 +2828,7 @@ namespace ICGOgreBites
 					values.push_back(Ogre::StringConverter::toString(xCamera));
 					values.push_back(Ogre::StringConverter::toString(yCamera));
 					values.push_back(Ogre::StringConverter::toString(zCamera));
+					values.push_back(Ogre::StringConverter::toString(numTrial));
 
 					mStatsPanel->setAllParamValues(values);
 				}

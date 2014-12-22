@@ -118,13 +118,10 @@ public:
 	{
 		dynamicsWorld->removeRigidBody(_obj);
 	}
-	const int getNumTrial()
-	{
-		return launchTrial;
-	}
 	void trialFailed()
 	{
 		launchTrial++;
+		mTrayMgr->setShot(launchTrial);
 	}
 	void collisionCheck();
 	void processCamera();

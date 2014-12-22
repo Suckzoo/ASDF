@@ -317,6 +317,8 @@ bool ICGAppFrame::SetupScene()
 		directionalLight->setDiffuseColour(Ogre::ColourValue(.25, .25, .2));
 		directionalLight->setSpecularColour(Ogre::ColourValue(.9, .9, .1));
 		directionalLight->setDirection(Ogre::Vector3( 0, 0, -1 ));
+
+		mTrayMgr->setShot(0);
 		//-------------------------------------------------------------------------------------
 	}
 
@@ -402,7 +404,7 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	mTrayMgr->setXCamera(mCamera->getRealPosition().x);
 	mTrayMgr->setYCamera(mCamera->getRealPosition().y);
 	mTrayMgr->setZCamera(mCamera->getRealPosition().z);
-	
+
 	Sleep(1000.0/120.0);
 	return true;
 }
