@@ -327,9 +327,11 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 		return false;
 	}
 	if (mKey_Space) {
-		if(!World::getInstance()->isRocketFired() && viewMode) {
+		if(!World::getInstance()->isRocketFired()) {
+			Ogre::Vector3 direction;
 			phase = FLYING;
-			Ogre::Vector3 direction = mCamera->getDirection();
+			if(viewMode) direction = mCamera->getDirection();
+			else direction = cDir;
 			btVector3 btDirection(direction.x, direction.y, direction.z);
 			World::getInstance()->launchRocket(btDirection);
 		}
@@ -355,15 +357,20 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 	switch(phase) {
 	case BEFORE_LAUNCH:
-		if(!viewMode) {
-			processCamera();
+		if(viewMode) {
+			processCameraZ();
 		}
 		else {
-			processCameraZ();
+			processCamera();
 		}
 		break;
 	case FLYING:
-		trackCamera();
+		if(viewMode) {
+			trackCamera();
+		}
+		else {
+			processCamera();
+		}
 		break;
 	default:
 		break;
@@ -468,6 +475,16 @@ bool ICGAppFrame::keyPressed( const OIS::KeyEvent &arg )
 			cDir = nDir;
 			break;
 		default:
+			if(!viewMode) {
+				vFRMove = 0.0f;
+				vLRRotate = 0.0f;
+				vLRMove = 0.0f;
+				vZRotate = 0.0f;
+			}
+			mCamera->setPosition(cPos);
+			mCamera->setDirection(cDir);
+			cPos = nPos;
+			cDir = nDir;
 			break;
 		}
 		viewMode = !viewMode;
