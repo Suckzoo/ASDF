@@ -40,7 +40,7 @@ public:
 		//set scale
 		helperNode->setScale(0.01,0.0001,0.0001); //scale : Full extent of box!
 		helperNode->setOrientation(0,0,0,1);
-		helperNode->setPosition(0,0,0);
+		helperNode->setPosition(0,-6,0);
 		
 		rocketTail = ICGAppFrame::getInstance()->getSceneMgr()->createParticleSystem("rocketTail", "Examples/JetEngine2");
 		helperNode->attachObject(rocketTail);
