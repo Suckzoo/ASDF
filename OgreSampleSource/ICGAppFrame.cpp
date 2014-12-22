@@ -51,6 +51,7 @@ ICGAppFrame::ICGAppFrame(void)
 	, mKey_Space(false)
 	, phase(BEFORE_LAUNCH)
 	, viewMode(false)
+	, changeT(0)
 	, mCameraNearClipDistance(1.0f)
 	, dynamicsWorld(nullptr)
 	, launchTrial(0)
@@ -242,8 +243,12 @@ void ICGAppFrame::initCamera()
 {
 	mCamera->setPosition(Ogre::Vector3(0,0,0));
 	mCamera->lookAt(Ogre::Vector3(0,0,500));
+	aPos = mCamera->getRealPosition();
+	aDir = mCamera->getRealDirection();
+	aUp = mCamera->getRealUp();
 	cPos = mCamera->getRealPosition();
 	cDir = mCamera->getRealDirection();
+	cUp = mCamera->getRealUp();
 }
 bool ICGAppFrame::SetupScene()
 {
@@ -329,11 +334,24 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	if (mKey_Space) {
 		if(!World::getInstance()->isRocketFired()) {
 			Ogre::Vector3 direction;
-			phase = FLYING;
 			if(viewMode) direction = mCamera->getDirection();
-			else direction = cDir;
+			else direction = aDir;
 			btVector3 btDirection(direction.x, direction.y, direction.z);
 			World::getInstance()->launchRocket(btDirection);
+			if(viewMode) {
+				//aiming
+				phase = FLYING;
+			}
+			else {
+				//free view
+				cPos = mCamera->getRealPosition();
+				cDir = mCamera->getRealDirection();
+				cUp = mCamera->getRealUp();
+				phase = CHANGING;
+				changeT = CHANGE_FRAME;
+				//tracking after changing
+				viewMode = !viewMode;
+			}
 		}
 	}
 
@@ -358,11 +376,16 @@ bool ICGAppFrame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	switch(phase) {
 	case BEFORE_LAUNCH:
 		if(viewMode) {
+			//aiming
 			processCameraZ();
 		}
 		else {
+			//free view
 			processCamera();
 		}
+		break;
+	case CHANGING:
+		changeMode();
 		break;
 	case FLYING:
 		if(viewMode) {
@@ -456,38 +479,59 @@ bool ICGAppFrame::keyPressed( const OIS::KeyEvent &arg )
 		mKey_C = true;
 	}
 	if(arg.key == OIS::KC_T) {
-		World::getInstance()->contactedWithPlanet();
+		if(phase == CHANGING || phase == FLYING) {
+			World::getInstance()->contactedWithPlanet();
+		}
 	}
 	if(arg.key == OIS::KC_TAB) {
-		Ogre::Vector3 nPos = mCamera->getRealPosition();
-		Ogre::Vector3 nDir = mCamera->getRealDirection();
 		switch(phase) {
 		case BEFORE_LAUNCH:
-			if(!viewMode) {
+			if(viewMode) {
+				//aiming
+				phase = CHANGING;
+				changeT = -CHANGE_FRAME;
+				aPos = mCamera->getRealPosition();
+				aDir = mCamera->getRealDirection();
+				aUp = mCamera->getRealUp();
+			}
+			else {
+				//free view
 				vFRMove = 0.0f;
 				vLRRotate = 0.0f;
 				vLRMove = 0.0f;
 				vZRotate = 0.0f;
+				phase = CHANGING;
+				changeT = CHANGE_FRAME;
+				cPos = mCamera->getRealPosition();
+				cDir = mCamera->getRealDirection();
+				cUp = mCamera->getRealUp();
 			}
-			mCamera->setPosition(cPos);
-			mCamera->setDirection(cDir);
-			cPos = nPos;
-			cDir = nDir;
+			viewMode = !viewMode;
+			break;
+		case FLYING:
+			if(viewMode) {
+				phase = CHANGING;
+				changeT = -CHANGE_FRAME;
+				aPos = mCamera->getRealPosition();
+				aDir = mCamera->getRealDirection();
+				aUp = mCamera->getRealUp();
+			}
+			else {
+				vFRMove = 0.0f;
+				vLRRotate = 0.0f;
+				vLRMove = 0.0f;
+				vZRotate = 0.0f;
+				phase = CHANGING;
+				changeT = CHANGE_FRAME;
+				cPos = mCamera->getRealPosition();
+				cDir = mCamera->getRealDirection();
+				cUp = mCamera->getRealUp();
+			}
+			viewMode = !viewMode;
 			break;
 		default:
-			if(!viewMode) {
-				vFRMove = 0.0f;
-				vLRRotate = 0.0f;
-				vLRMove = 0.0f;
-				vZRotate = 0.0f;
-			}
-			mCamera->setPosition(cPos);
-			mCamera->setDirection(cDir);
-			cPos = nPos;
-			cDir = nDir;
 			break;
 		}
-		viewMode = !viewMode;
 	}
 	if(arg.key == OIS::KC_I) {
 		vFRMove = 0.0f;
@@ -546,11 +590,11 @@ bool ICGAppFrame::mouseMoved( const OIS::MouseEvent &arg )
 	}
 	if(mMouse_L) {
 		Ogre::Vector2 newPos = Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs);
-		mCamera->rotate(mCamera->getRealUp(), Ogre::Radian(Ogre::Degree(-0.1)*(newPos.x-pos.x)));
-		mCamera->rotate(mCamera->getRealDirection().crossProduct(mCamera->getRealUp()), Ogre::Radian(Ogre::Degree(-0.1)*(newPos.y-pos.y)));
-		pos = newPos;
 		switch(phase) {
 		case BEFORE_LAUNCH:
+			mCamera->rotate(mCamera->getRealUp(), Ogre::Radian(Ogre::Degree(-0.1)*(newPos.x-pos.x)));
+			mCamera->rotate(mCamera->getRealDirection().crossProduct(mCamera->getRealUp()), Ogre::Radian(Ogre::Degree(-0.1)*(newPos.y-pos.y)));
+			pos = newPos;
 			if(viewMode) {
 				Ogre::Vector3 cameraDirection = mCamera->getDirection();
 				cameraDirection /= cameraDirection.length();
@@ -585,7 +629,12 @@ bool ICGAppFrame::mouseMoved( const OIS::MouseEvent &arg )
 				}
 				World::getInstance()->setRocketOrientation(q.w, q.x, q.y, q.z);
 			}
-			else {
+			break;
+		case FLYING:
+			if(!viewMode) {
+				mCamera->rotate(mCamera->getRealUp(), Ogre::Radian(Ogre::Degree(-0.1)*(newPos.x-pos.x)));
+				mCamera->rotate(mCamera->getRealDirection().crossProduct(mCamera->getRealUp()), Ogre::Radian(Ogre::Degree(-0.1)*(newPos.y-pos.y)));
+				pos = newPos;
 			}
 			break;
 		default:
@@ -723,6 +772,51 @@ void ICGAppFrame::trackCamera()
 		+ mCamera->getRealUp()/-10.0;
 	mCamera->setPosition(World::getInstance()->getRocketPosition() + direction*offsetScale);
 	mCamera->setDirection(direction);
+}
+
+void ICGAppFrame::changeMode()
+{
+	if(changeT > 0) {
+		//free -> (aiming or tracking)
+		Ogre::Vector3 targetPos;
+		Ogre::Vector3 targetDir;
+		Ogre::Vector3 targetUp;
+		
+		if(World::getInstance()->isRocketFired()) {
+			Ogre::Real offsetScale = -200.0f;
+			btVector3 rocketDir = World::getInstance()->getRocket()->getLinearVelocity();
+			Ogre::Vector3 direction = Ogre::Vector3(rocketDir.getX(), rocketDir.getY(), rocketDir.getZ()).normalisedCopy()
+				+ mCamera->getRealUp()/-10.0;
+			targetPos = World::getInstance()->getRocketPosition() + direction*offsetScale;
+			targetDir = direction;
+			targetUp = Ogre::Vector3(0.0f, 1.0f, 0.0f);
+		}
+		else {
+			targetPos = aPos;
+			targetDir = aDir;
+			targetUp = aUp;
+		}
+
+		mCamera->setPosition(mCamera->getRealPosition()*(changeT-1)/changeT + targetPos/changeT);
+		mCamera->setDirection(mCamera->getRealDirection()*(changeT-1)/changeT + targetDir/changeT);
+		mCamera->setFixedYawAxis(true, mCamera->getRealUp()*(changeT-1)/changeT + targetUp/changeT);
+		changeT--;
+	}
+	else if(changeT < 0) {
+		//(aiming or tracking) -> free
+		mCamera->setPosition(mCamera->getRealPosition()*(-changeT-1)/-changeT + cPos/-changeT);
+		mCamera->setDirection(mCamera->getRealDirection()*(-changeT-1)/-changeT + cDir/-changeT);
+		mCamera->setFixedYawAxis(true, mCamera->getRealUp()*(-changeT-1)/-changeT + cUp/-changeT);
+		changeT++;
+	}
+	if(changeT == 0) {
+		if(World::getInstance()->isRocketFired()) {
+			phase = FLYING;
+		}
+		else {
+			phase = BEFORE_LAUNCH;
+		}
+	}
 }
 
 void ICGAppFrame::collisionCheck()
