@@ -26,9 +26,10 @@ Computer Graphics and Visualization Lab @ KAIST
 #include <btBulletCollisionCommon.h>
 #include <exception>
 #define BEFORE_LAUNCH 1
-#define LAUNCHING 2
+#define CHANGING 2
 #define FLYING 3
 #define EXPLODE 4
+#define CHANGE_FRAME 120
 using std::exception;
 /**
  * ICGAppFrame 
@@ -56,8 +57,12 @@ protected:
 	bool mShutDown;
 	bool mMouse_L;
 	Ogre::Vector2 pos;
+	Ogre::Vector3 aPos;
+	Ogre::Vector3 aDir;
+	Ogre::Vector3 aUp;
 	Ogre::Vector3 cPos;
 	Ogre::Vector3 cDir;
+	Ogre::Vector3 cUp;
 	bool mKey_W;
 	bool mKey_S;
 	Ogre::Real accelFRMove;
@@ -77,6 +82,7 @@ protected:
 	bool mKey_Space;
 	Ogre::int32 phase;
 	bool viewMode;
+	Ogre::int32 changeT;
 
 	// OIS Input devices
 	OIS::InputManager* mInputManager;
@@ -124,6 +130,7 @@ public:
 	void processCamera();
 	void processCameraZ();
 	void trackCamera();
+	void changeMode();
 	void Shutdown();
 	/** Upper-most method directly called from WinMain */
 	bool go(void);

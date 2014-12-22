@@ -144,6 +144,7 @@ void World::destroyRocket()
 		(*m_pLaunchedRocket).get()->getSceneNode()->attachObject(particleSystem2);
 		isExploding = true;
 		explosion_begin = explosion_end = clock();
+		ICGAppFrame::getInstance()->setPhase(EXPLODE);
 		return;
 	}
 	else if(explosion_end - explosion_begin < 5000){
@@ -167,7 +168,7 @@ void World::destroyRocket()
 	{
 		isContactedWithPlanet = false;
 		isRocketLaunched = false;
-		ICGAppFrame::getInstance()->setPhase(1);
+		ICGAppFrame::getInstance()->setPhase(BEFORE_LAUNCH);
 		Sleep(500);
 		ICGAppFrame::getInstance()->initCamera();
 		m_pWorld.erase(m_pLaunchedRocket);
